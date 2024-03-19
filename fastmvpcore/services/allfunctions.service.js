@@ -13,31 +13,9 @@ module.exports = {
       };
     } else {
       if (create?.error?.code) {
-        if (create.error.code == "42P01") {
-          return {
-            status: "error",
-            msg: "No existe la tabla " + table,
-            code: create.error.code,
-            detail: table,
-            data: null,
-          };
-        } else if (create.error.code == "23505") {
-          return {
-            status: "error",
-            msg: "Un dato está duplicado",
-            code: create.error.code,
-            detail: create.error.detail,
-            data: null,
-          };
-        } else if (create.error.code == "23502") {
-          return {
-            status: "error",
-            msg: "Un campo es requerido y está sin datos",
-            code: create.error.code,
-            detail: create.error.detail,
-            data: null,
-          };
-        }
+        const { errorControlWithSqlCode } = require("../utils/functions");
+        let formatError = errorControlWithSqlCode(create,table);
+        if (formatError.conditional) return formatError.payload;
       }
       return {
         status: "error",
@@ -61,31 +39,9 @@ module.exports = {
       };
     } else {
       if (updateResponse?.error?.code) {
-        if (updateResponse.error.code == "42P01") {
-          return {
-            status: "error",
-            msg: "No existe la tabla " + table,
-            code: updateResponse.error.code,
-            detail: table,
-            data: null,
-          };
-        } else if (updateResponse.error.code == "23505") {
-          return {
-            status: "error",
-            msg: "Un dato está duplicado",
-            code: updateResponse.error.code,
-            detail: updateResponse.error.detail,
-            data: null,
-          };
-        } else if (updateResponse.error.code == "rangeUpdate") {
-          return {
-            status: "error",
-            msg: "No existe el valor para la condicional",
-            code: updateResponse.error.code,
-            detail: updateResponse.error.detail,
-            data: null,
-          };
-        }
+        const { errorControlWithSqlCode } = require("../utils/functions");
+        let formatError = errorControlWithSqlCode(updateResponse,table);
+        if(formatError.conditional) return formatError.payload;
       }
       return {
         status: "error",
