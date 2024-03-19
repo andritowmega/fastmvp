@@ -3,8 +3,8 @@ module.exports = {
   async create(table, dataJson) {
     return new Promise(async (resolve, reject) => {
       const connection = connectionDb();
-      const { makeSqlStringInsert } = require("../../core/toassemble");
-      const { sanitationStringSql } = require("../../core/functions");
+      const { makeSqlStringInsert } = require("../utils/toassemble");
+      const { sanitationStringSql } = require("../utils/functions");
       const queryString =
         `INSERT INTO  ${sanitationStringSql(table)} ` +
         makeSqlStringInsert(dataJson);
@@ -32,8 +32,8 @@ module.exports = {
   async update(table, dataJson, condition) {
     return new Promise(async (resolve, reject) => {
       const connection = connectionDb();
-      const { makeSqlStringUpdate } = require("../../core/toassemble");
-      const { sanitationStringSql } = require("../../core/functions");
+      const { makeSqlStringUpdate } = require("../utils/toassemble");
+      const { sanitationStringSql } = require("../utils/functions");
       const queryString = `UPDATE  ${sanitationStringSql(
         table
       )} SET ${makeSqlStringUpdate(dataJson, condition)}`;

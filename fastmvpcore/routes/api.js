@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-const FastMvpController = require("../../controllers/fastmvp/fastmvp.controller");
+const FastMvpController = require("../controllers/fastmvp.controller");
 
 /* GET api listing. */
 router.get('/', function(req, res, next) {

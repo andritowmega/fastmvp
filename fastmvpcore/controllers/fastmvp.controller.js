@@ -1,6 +1,6 @@
 class FastMvpController {
   static async Create(req, res) {
-    const { create } = require("../../services/fastmvp/allfunctions.service");
+    const { create } = require("../services/allfunctions.service");
     const response = await create(req.params.table, req.body).catch((e) => {
       console.error("FastMvp Controller: can't create", e);
       return e;
@@ -21,7 +21,7 @@ class FastMvpController {
     return res.json(response).status(500);
   }
   static async Update(req, res) {
-    const { update } = require("../../services/fastmvp/allfunctions.service");
+    const { update } = require("../services/allfunctions.service");
     let condition = req.params.key
       ? {
           key: req.params.key,

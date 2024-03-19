@@ -5,7 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var fastMvpApiRouter = require('./routes/fastmvp/api');
+var fastMvpApiRouter = require('./fastmvpcore/routes/api');
 
 var app = express();
 

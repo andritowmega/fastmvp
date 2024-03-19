@@ -1,4 +1,4 @@
-const AllTablesModel = require("../../models/fastmvp/alltablescrud.model");
+const AllTablesModel = require("../models/alltablescrud.model");
 module.exports = {
   async create(table, dataJson) {
     const create = await AllTablesModel.create(table, dataJson).catch((e) => {
