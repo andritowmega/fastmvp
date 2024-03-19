@@ -9,4 +9,6 @@ router.get('/', function(req, res, next) {
 
 /* POST api listing. */
 router.post('/:table/create',FastMvpController.Create);
+router.post("/:table/update/all", FastMvpController.Update);
+router.post("/:table/update/:key/:value", FastMvpController.Update);
 module.exports = router;
