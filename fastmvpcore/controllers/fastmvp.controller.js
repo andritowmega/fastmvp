@@ -39,5 +39,25 @@ class FastMvpController {
     }
     return res.json(response).status(500);
   }
+  static async Delete(req, res) {
+    const { deletePg } = require("../services/allfunctions.service");
+    let condition = req.params.key
+      ? {
+          key: req.params.key,
+          value: req.params.value,
+        }
+      : null;
+    console.log("condition",condition);
+    const response = await deletePg(req.params.table, condition).catch(
+      (e) => {
+        console.error("FastMvp Controller: can't delete", e);
+        return e;
+      }
+    );
+    if (response?.status && response.status == "ok") {
+      return res.json(response).status(200);
+    }
+    return res.json(response).status(500);
+  }
 }
 module.exports = FastMvpController;
