@@ -47,4 +47,52 @@ module.exports = {
       };
     }
   },
+  async update(table, dataJson, condition) {
+    const updateResponse = await AllTablesModel.update(table, dataJson, condition).catch((e) => {
+      console.error("SERVICE AllFunctions: can not update", e);
+      return e;
+    });
+    console.log("update", updateResponse);
+    if (updateResponse?.status && updateResponse.status == "ok") {
+      return {
+        status: "ok",
+        msg: "Se actualizo correctamente",
+        data: updateResponse.data,
+      };
+    } else {
+      if (updateResponse?.error?.code) {
+        if (updateResponse.error.code == "42P01") {
+          return {
+            status: "error",
+            msg: "No existe la tabla " + table,
+            code: updateResponse.error.code,
+            detail: table,
+            data: null,
+          };
+        } else if (updateResponse.error.code == "23505") {
+          return {
+            status: "error",
+            msg: "Un dato está duplicado",
+            code: updateResponse.error.code,
+            detail: updateResponse.error.detail,
+            data: null,
+          };
+        } else if (updateResponse.error.code == "rangeUpdate") {
+          return {
+            status: "error",
+            msg: "No existe el valor para la condicional",
+            code: updateResponse.error.code,
+            detail: updateResponse.error.detail,
+            data: null,
+          };
+        }
+      }
+      return {
+        status: "error",
+        msg: "Error desconocido",
+        code: 500,
+        data: null,
+      };
+    }
+  },
 };
