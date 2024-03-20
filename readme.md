@@ -119,3 +119,34 @@ body payload
             }
         ]
     }
+
+### Insert 
+
+`POST /fm/api/:table/create`
+
+insert data into any table agregando en el body.
+
+``` 
+body payload
+
+{  
+    "name":"Carlos6 Torres",
+    "phone":"929545876",
+    "email":"carlos6@hotmail.com",
+    "status":true
+}
+```
+#### Response
+
+    {
+        "status": "ok",
+        "msg": "Se insertó correctamente",
+        "data": {
+            "id": 36,
+            "name": "Carlos6 Torres",
+            "phone": "929545876",
+            "email": "carlos6@hotmail.com",
+            "status": true,
+            "city": null
+        }
+    }
