@@ -29,6 +29,34 @@ module.exports = {
       return reject(data);
     });
   },
+  async get(table, dataJson) {
+    return new Promise(async (resolve, reject) => {
+      const connection = connectionDb();
+      const { makeSqlStringSelect } = require("../utils/toassemble");
+      const { sanitationStringSql } = require("../utils/functions");
+      let queryString =
+        `SELECT ${makeSqlStringSelect(dataJson)} FROM ${sanitationStringSql(table)} `
+      console.log("queryString", queryString);
+      const data = await connection
+        .query(queryString)
+        .catch((err) => {
+          console.error("MODEL AllTablesCrud: Can not select - ", err);
+          return {
+            status: "error",
+            msg: "db",
+            error: err,
+          };
+        });
+      connection.end();
+      if (data?.rows?.length)
+        return resolve({
+          status: "ok",
+          msg: "done",
+          data: data.rows,
+        });
+      return reject(data);
+    });
+  },
   async update(table, dataJson, condition) {
     return new Promise(async (resolve, reject) => {
       const connection = connectionDb();
@@ -81,16 +109,14 @@ module.exports = {
         table
       )} ${makeSqlStringDelete(condition)}`;
       console.log("queryString", queryString);
-      const data = await connection
-        .query(queryString)
-        .catch((err) => {
-          console.error("MODEL AllTablesCrud: Can't delete' - ", err);
-          return {
-            status: "error",
-            msg: "db",
-            error: err,
-          };
-        });
+      const data = await connection.query(queryString).catch((err) => {
+        console.error("MODEL AllTablesCrud: Can't delete' - ", err);
+        return {
+          status: "error",
+          msg: "db",
+          error: err,
+        };
+      });
       connection.end();
       if (
         data?.command &&

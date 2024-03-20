@@ -20,6 +20,27 @@ class FastMvpController {
     }
     return res.json(response).status(500);
   }
+  static async Get(req, res) {
+    const { get } = require("../services/allfunctions.service");
+    const response = await get(req.params.table, req.body).catch((e) => {
+      console.error("FastMvp Controller: can't get", e);
+      return e;
+    });
+    if (response?.status && response.status == "ok") {
+      return res.json(response).status(200);
+    } else if (
+      response?.status &&
+      response.code &&
+      response.status == "error"
+    ) {
+      if (response.code == "42P01") {
+        return res.json(response).status(404);
+      } else if (response.code == "23505") {
+        return res.json(response).status(400);
+      }
+    }
+    return res.json(response).status(500);
+  }
   static async Update(req, res) {
     const { update } = require("../services/allfunctions.service");
     let condition = req.params.key
@@ -47,13 +68,11 @@ class FastMvpController {
           value: req.params.value,
         }
       : null;
-    console.log("condition",condition);
-    const response = await deletePg(req.params.table, condition).catch(
-      (e) => {
-        console.error("FastMvp Controller: can't delete", e);
-        return e;
-      }
-    );
+    console.log("condition", condition);
+    const response = await deletePg(req.params.table, condition).catch((e) => {
+      console.error("FastMvp Controller: can't delete", e);
+      return e;
+    });
     if (response?.status && response.status == "ok") {
       return res.json(response).status(200);
     }

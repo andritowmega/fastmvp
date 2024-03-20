@@ -30,8 +30,16 @@ module.exports = {
     return null;
   },
   makeSqlStringDelete(condition) {
-      let response = ` WHERE ${condition.key} = ${condition.value}`;
-      response += " RETURNING *";
+    let response = ` WHERE ${condition.key} = ${condition.value}`;
+    response += " RETURNING *";
+    return response;
+  },
+  makeSqlStringSelect(datayJson) {
+    if (datayJson?.filters?.length && datayJson.filters.length > 0) {
+      let namesString = datayJson.filters.join(", ");
+      let response = `${namesString}`;
       return response;
+    }
+    return ` * `;
   },
 };
