@@ -14,7 +14,7 @@ module.exports = {
     } else {
       if (create?.error?.code) {
         const { errorControlWithSqlCode } = require("../utils/functions");
-        let formatError = errorControlWithSqlCode(create,table);
+        let formatError = errorControlWithSqlCode(create, table);
         if (formatError.conditional) return formatError.payload;
       }
       return {
@@ -26,7 +26,11 @@ module.exports = {
     }
   },
   async update(table, dataJson, condition) {
-    const updateResponse = await AllTablesModel.update(table, dataJson, condition).catch((e) => {
+    const updateResponse = await AllTablesModel.update(
+      table,
+      dataJson,
+      condition
+    ).catch((e) => {
       console.error("SERVICE AllFunctions: can not update", e);
       return e;
     });
@@ -40,8 +44,8 @@ module.exports = {
     } else {
       if (updateResponse?.error?.code) {
         const { errorControlWithSqlCode } = require("../utils/functions");
-        let formatError = errorControlWithSqlCode(updateResponse,table);
-        if(formatError.conditional) return formatError.payload;
+        let formatError = errorControlWithSqlCode(updateResponse, table);
+        if (formatError.conditional) return formatError.payload;
       }
       return {
         status: "error",
@@ -50,5 +54,32 @@ module.exports = {
         data: null,
       };
     }
+  },
+  async deletePg(table, condition) {
+    const deleteResponse = await AllTablesModel.delete(
+      table,
+      condition
+    ).catch((e) => {
+      console.error("SERVICE AllFunctions: can not delete", e);
+      return e;
+    });
+    if (deleteResponse?.status && deleteResponse.status == "ok") {
+      return {
+        status: "ok",
+        msg: "Se actualizo correctamente",
+        data: deleteResponse.data,
+      };
+    }
+    if (deleteResponse?.error?.code) {
+      const { errorControlWithSqlCode } = require("../utils/functions");
+      let formatError = errorControlWithSqlCode(deleteResponse, table);
+      if (formatError.conditional) return formatError.payload;
+    }
+    return {
+      status: "error",
+      msg: "Error desconocido",
+      code: 500,
+      data: null,
+    };
   },
 };

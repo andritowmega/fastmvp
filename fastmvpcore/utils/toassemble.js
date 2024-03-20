@@ -29,4 +29,9 @@ module.exports = {
     }
     return null;
   },
+  makeSqlStringDelete(condition) {
+      let response = ` WHERE ${condition.key} = ${condition.value}`;
+      response += " RETURNING *";
+      return response;
+  },
 };

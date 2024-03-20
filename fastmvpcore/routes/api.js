@@ -11,4 +11,5 @@ router.get('/', function(req, res, next) {
 router.post('/:table/create',FastMvpController.Create);
 router.post("/:table/update/all", FastMvpController.Update);
 router.post("/:table/update/:key/:value", FastMvpController.Update);
+router.post("/:table/delete/:key/:value", FastMvpController.Delete);
 module.exports = router;
