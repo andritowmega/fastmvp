@@ -66,7 +66,7 @@ module.exports = {
     if (deleteResponse?.status && deleteResponse.status == "ok") {
       return {
         status: "ok",
-        msg: "Se actualizo correctamente",
+        msg: "Se elimino correctamente",
         data: deleteResponse.data,
       };
     }

@@ -58,7 +58,7 @@ module.exports = {
           status: "error",
           msg: "key out range",
           error: {
-            code: "rangeUpdate",
+            code: "outrange",
           },
         });
       }
@@ -101,7 +101,7 @@ module.exports = {
           status: "error",
           msg: "key out range",
           error: {
-            code: "rangeUpdate",
+            code: "outrange",
           },
         });
       }

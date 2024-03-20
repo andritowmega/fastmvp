@@ -42,7 +42,7 @@ module.exports = {
           data: null,
         }
       };
-    } else if (errJson.error.code == "rangeUpdate") {
+    } else if (errJson.error.code == "outrange") {
       return {
         conditional: true,
         payload: {
@@ -51,7 +51,7 @@ module.exports = {
           code: errJson.error.code,
           detail: errJson.error.detail,
           data: null,
-        }
+        },
       };
     }
     return {
