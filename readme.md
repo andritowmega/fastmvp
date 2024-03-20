@@ -150,3 +150,28 @@ body payload
             "city": null
         }
     }
+
+### Delete
+
+`POST /fm/api/:table/delete/:key/:value`
+
+Removes data from any table by adding the where conditional to :key/:value.
+
+For example: /fm/api/user/delete/id/15
+
+I would create the statement DELETE FROM user WHERE id = 15 RETURNING *;
+
+#### Response
+
+    {
+        "status": "ok",
+        "msg": "Se elimino correctamente",
+        "data": {
+            "id": 20,
+            "name": "Andres Carrasco",
+            "phone": "929960761",
+            "email": "andres1@hotmail.com",
+            "status": true,
+            "city": null
+        }
+    }
