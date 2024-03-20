@@ -180,9 +180,9 @@ create the statement DELETE FROM user WHERE id = 15 RETURNING *;
 
 `POST /fm/api/:table/update/:key/:value`
 
-Removes data from any table by adding the where conditional to :key/:value.
+Update data from any table by adding the where conditional to :key/:value.
 
-For example: /fm/api/user/delete/id/15
+For example: /fm/api/user/update/id/27
 
 ``` 
 body payload
