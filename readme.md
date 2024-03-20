@@ -96,7 +96,7 @@ Example: SELECT filter1,filter2,filter3 FROM table;
 body payload
 
 {  
-    filters: ["name","lastname"],
+    filters: ["name","phone"],
 }
 ```
 #### Response
