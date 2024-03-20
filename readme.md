@@ -159,7 +159,7 @@ Removes data from any table by adding the where conditional to :key/:value.
 
 For example: /fm/api/user/delete/id/15
 
-I would create the statement DELETE FROM user WHERE id = 15 RETURNING *;
+create the statement DELETE FROM user WHERE id = 15 RETURNING *;
 
 #### Response
 
@@ -171,6 +171,40 @@ I would create the statement DELETE FROM user WHERE id = 15 RETURNING *;
             "name": "Andres Carrasco",
             "phone": "929960761",
             "email": "andres1@hotmail.com",
+            "status": true,
+            "city": null
+        }
+    }
+
+### Update
+
+`POST /fm/api/:table/update/:key/:value`
+
+Removes data from any table by adding the where conditional to :key/:value.
+
+For example: /fm/api/user/delete/id/15
+
+``` 
+body payload
+
+{
+    "phone":"929960763",
+    "email":"algo@hotmail.com"
+}
+```
+
+create the statement UPDATE user SET phone=$1, email=$2 WHERE id = 15 RETURNING *;
+
+#### Response
+
+    {
+        "status": "ok",
+        "msg": "Se actualizo correctamente",
+        "data": {
+            "id": 27,
+            "name": "Andres Carrasco",
+            "phone": "929960763",
+            "email": "algo@hotmail.com",
             "status": true,
             "city": null
         }
