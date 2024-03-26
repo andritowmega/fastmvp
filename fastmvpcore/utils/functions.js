@@ -1,11 +1,15 @@
 module.exports = {
   sanitationStringSql(data) {
-    const cleanData = data
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .trim();
-    const cleanDataWithoutSqlInjection = cleanData.replace(/(['";])/g, "");
-    return cleanDataWithoutSqlInjection;
+    console.log("data",data)
+    if(data){
+      const cleanData = data
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+      const cleanDataWithoutSqlInjection = cleanData.replace(/(['";])/g, "");
+      return cleanDataWithoutSqlInjection;
+    }
+    return null;
   },
   errorControlWithSqlCode(errJson,table){
     console.log("errorJson",errJson);
@@ -53,10 +57,21 @@ module.exports = {
           data: null,
         },
       };
+    } else if (errJson.error.code == "valuesJson"){
+      return {
+        conditional: true,
+        payload: {
+          status: "error",
+          msg: "No se han enviado Valores",
+          code: errJson.error.code,
+          detail: errJson.error.detail,
+          data: null,
+        },
+      };
     }
-    return {
+      return {
         conditional: false,
-        payload: errJson
+        payload: errJson,
       };
   }
 };

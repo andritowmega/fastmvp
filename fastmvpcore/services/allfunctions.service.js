@@ -1,4 +1,5 @@
 const AllTablesModel = require("../models/alltablescrud.model");
+const JoinsModel = require("../models/joins.model");
 module.exports = {
   async create(table, dataJson) {
     const create = await AllTablesModel.create(table, dataJson).catch((e) => {
@@ -105,5 +106,82 @@ module.exports = {
       code: 500,
       data: null,
     };
+  },
+  async innerJoin(tables, dataJson) {
+    const create = await JoinsModel.innerJoin(tables, dataJson).catch((e) => {
+      console.error("SERVICE AllFunctions: can not execute innerJoin", e);
+      return e;
+    });
+    if (create?.status && create.status == "ok") {
+      return {
+        status: "ok",
+        msg: "Datos obtenidos",
+        data: create.data,
+      };
+    } else {
+      if (create?.error?.code) {
+        const { errorControlWithSqlCode } = require("../utils/functions");
+        let formatError = errorControlWithSqlCode(create, tables.table1);
+        if (formatError.conditional) return formatError.payload;
+      }
+      return {
+        status: "error",
+        msg: "Error desconocido",
+        code: 500,
+        data: null,
+      };
+    }
+  },
+  async innerJoinLeft(tables, dataJson) {
+    const create = await JoinsModel.innerJoinValueLeft(tables, dataJson).catch(
+      (e) => {
+        console.error("SERVICE AllFunctions: can not execute innerJoin", e);
+        return e;
+      }
+    );
+    if (create?.status && create.status == "ok") {
+      return {
+        status: "ok",
+        msg: "Datos obtenidos",
+        data: create.data,
+      };
+    } else {
+      if (create?.error?.code) {
+        const { errorControlWithSqlCode } = require("../utils/functions");
+        let formatError = errorControlWithSqlCode(create, tables.table1);
+        if (formatError.conditional) return formatError.payload;
+      }
+      return {
+        status: "error",
+        msg: "Error desconocido",
+        code: 500,
+        data: null,
+      };
+    }
+  },
+  async innerJoinRight(tables, dataJson) {
+    const create = await JoinsModel.innerJoinValueRight(tables, dataJson).catch((e) => {
+      console.error("SERVICE AllFunctions: can not execute innerJoin", e);
+      return e;
+    });
+    if (create?.status && create.status == "ok") {
+      return {
+        status: "ok",
+        msg: "Datos obtenidos",
+        data: create.data,
+      };
+    } else {
+      if (create?.error?.code) {
+        const { errorControlWithSqlCode } = require("../utils/functions");
+        let formatError = errorControlWithSqlCode(create, tables.table1);
+        if (formatError.conditional) return formatError.payload;
+      }
+      return {
+        status: "error",
+        msg: "Error desconocido",
+        code: 500,
+        data: null,
+      };
+    }
   },
 };
