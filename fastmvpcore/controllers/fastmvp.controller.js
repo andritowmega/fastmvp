@@ -1,6 +1,10 @@
 class FastMvpController {
   static async Create(req, res) {
-    const { create } = require("../services/allfunctions.service");
+    const {
+      create,
+      innerJoinLeft,
+      innerJoinRight,
+    } = require("../services/allfunctions.service");
     const response = await create(req.params.table, req.body).catch((e) => {
       console.error("FastMvp Controller: can't create", e);
       return e;
@@ -77,6 +81,78 @@ class FastMvpController {
       return res.json(response).status(200);
     }
     return res.json(response).status(500);
+  }
+  static async InnerJoin(req, res) {
+    const { innerJoin } = require("../services/allfunctions.service");
+    if (req.params.table1 && req.params.table2) {
+      const tables = {
+        table1: req.params.table1,
+        table2: req.params.table2,
+      };
+      const response = await innerJoin(tables, req.body).catch((e) => {
+        console.error("FastMvp Controller: can't execute InnerJoin", e);
+        return e;
+      });
+      if (response?.status && response.status == "ok") {
+        return res.json(response).status(200);
+      }
+      return res.json(response).status(500);
+    }
+    return res
+      .json({
+        status: "error",
+        msg: "Wrong Url",
+        data: null,
+      })
+      .status(404);
+  }
+  static async InnerJoinLeft(req, res) {
+    const { innerJoinLeft } = require("../services/allfunctions.service");
+    if (req.params.table1 && req.params.table2) {
+      const tables = {
+        table1: req.params.table1,
+        table2: req.params.table2,
+      };
+      const response = await innerJoinLeft(tables, req.body).catch((e) => {
+        console.error("FastMvp Controller: can't execute InnerJoin", e);
+        return e;
+      });
+      if (response?.status && response.status == "ok") {
+        return res.json(response).status(200);
+      }
+      return res.json(response).status(500);
+    }
+    return res
+      .json({
+        status: "error",
+        msg: "Wrong Url",
+        data: null,
+      })
+      .status(404);
+  }
+  static async InnerJoinRight(req, res) {
+    const { innerJoinRight } = require("../services/allfunctions.service");
+    if (req.params.table1 && req.params.table2) {
+      const tables = {
+        table1: req.params.table1,
+        table2: req.params.table2,
+      };
+      const response = await innerJoinRight(tables, req.body).catch((e) => {
+        console.error("FastMvp Controller: can't execute InnerJoin", e);
+        return e;
+      });
+      if (response?.status && response.status == "ok") {
+        return res.json(response).status(200);
+      }
+      return res.json(response).status(500);
+    }
+    return res
+      .json({
+        status: "error",
+        msg: "Wrong Url",
+        data: null,
+      })
+      .status(404);
   }
 }
 module.exports = FastMvpController;
