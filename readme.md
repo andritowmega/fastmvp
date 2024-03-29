@@ -209,3 +209,197 @@ create the statement UPDATE user SET phone=$1, email=$2 WHERE id = 15 RETURNING 
             "city": null
         }
     }
+
+### InnerJoin
+
+It is important to keep in mind the position of the tables for SQL queries, table1 will be on the left and table2 will be on the right for the next queries that require where, left join and right join
+
+`EXAMPLE POST /fm/api/:table1/innerj/:table2`
+
+    SELECT * FROM table1 INNER JOIN tabla2 ON table1.column = table2.column;
+
+`EXAMPLE POST /fm/api/user/innerj/history`
+
+    SELECT * FROM user INNER JOIN history ON user.column = history.column;
+
+#### InnerJoin without where
+
+`POST /fm/api/:table1/innerj/:table2`
+
+``` 
+body payload
+
+"keys":{
+        "leftKey":"rightKey"
+    }
+```
+    SELECT * FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey;
+
+#### EXAMPLE InnerJoin without where
+
+`POST /fm/api/tst/innerj/test2` 
+
+``` 
+body payload
+
+"keys":{
+        "id":"id_user"
+    }
+```
+    SELECT * FROM tst INNER JOIN test2 ON tst.id = test2.id_user;
+``` 
+Response
+
+{
+    "status": "ok",
+    "msg": "Datos obtenidos",
+    "data": [
+        {
+            "id": 1,
+            "name": "Carlos2 Torres",
+            "phone": "929545871",
+            "email": "carlos2@hotmail.com",
+            "status": false,
+            "city": null,
+            "origen": "La Campiña",
+            "destino": "El centro",
+            "id_pasajero": 32,
+            "id_user": 31,
+            "precio": "25.1"
+        },
+        {
+            "id": 2,
+            "name": "Carlos2 Torres",
+            "phone": "929545871",
+            "email": "carlos2@hotmail.com",
+            "status": false,
+            "city": null,
+            "origen": "Plaza de Armas",
+            "destino": "Feria el altiplano",
+            "id_pasajero": 35,
+            "id_user": 31,
+            "precio": "30"
+        },
+        {
+            "id": 3,
+            "name": "Carlos6 Torres",
+            "phone": "929545876",
+            "email": "carlos6@hotmail.com",
+            "status": true,
+            "city": null,
+            "origen": "Estadio melgar",
+            "destino": "Aeropuerto",
+            "id_pasajero": 27,
+            "id_user": 36,
+            "precio": "58.5"
+        },
+        {
+            "id": 4,
+            "name": "Carlos6 Torres",
+            "phone": "929545876",
+            "email": "carlos6@hotmail.com",
+            "status": true,
+            "city": null,
+            "origen": "Estadio melgar",
+            "destino": "Aeropuerto",
+            "id_pasajero": 27,
+            "id_user": 36,
+            "precio": "58.5"
+        }
+    ]
+}
+```
+
+You can also add filters for the select query
+
+`POST /fm/api/tst/innerj/test2` 
+
+``` 
+body payload
+
+{
+    "filters":["tst.id AS idtst","precio"],
+    "keys":{
+        "id":"id_user"
+    }
+}
+```
+    SELECT tst.id AS idtst,precio FROM tst INNER JOIN test2 ON tst.id = test2.id_user;
+``` 
+Response
+
+{
+    "status": "ok",
+    "msg": "Datos obtenidos",
+    "data": [
+        {
+            "idtst": 31,
+            "precio": "25.1"
+        },
+        {
+            "idtst": 31,
+            "precio": "30"
+        },
+        {
+            "idtst": 36,
+            "precio": "58.5"
+        },
+        {
+            "idtst": 36,
+            "precio": "58.5"
+        }
+    ]
+}
+```
+
+#### InnerJoin with where
+
+To use where, you need to maintain the order of left table and right table in the body payload.
+
+When adding RIGHT at the end, you want to search for the right table, in this example it is table2
+
+`POST /fm/api/:table1/innerj/:table2/right`
+
+``` 
+body payload
+
+{
+    "value":123,
+    "keys":{
+        "leftKey":"rightKey"
+    }
+}
+
+```
+    SELECT * FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey WHERE table2.rightkey = 123;
+
+When adding LEFT at the end, you want to search for the left table, in this example it is table1
+
+`POST /fm/api/:table1/innerj/:table2/left`
+
+``` 
+body payload
+
+{
+    "value":123,
+    "keys":{
+        "leftKey":"rightKey"
+    }
+}
+```
+    SELECT * FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey WHERE table1.leftkey = 123;
+
+You can also add filters for the select query and the answers are the same as the previous ones.
+
+``` 
+body payload
+
+{
+    "filters":["tst.id AS idtst","*"],
+    "value":123,
+    "keys":{
+        "id":"id_user"
+    }
+}
+```
+    SELECT tst.id AS idtst,* FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey WHERE table1.leftkey = 123;

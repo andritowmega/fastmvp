@@ -90,18 +90,18 @@ module.exports = {
       )}=$1`;
       console.log("queryString", queryString);
       const data = await connection
-          .query(queryString, [sanitationStringSql(dataJson.value)])
-          .catch((err) => {
-            console.error(
-              `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
-              err
-            );
-            return {
-              status: "error",
-              msg: "db",
-              error: err,
-            };
-          });
+        .query(queryString, [sanitationStringSql(dataJson.value)])
+        .catch((err) => {
+          console.error(
+            `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
+            err
+          );
+          return {
+            status: "error",
+            msg: "db",
+            error: err,
+          };
+        });
       connection.end();
       if (Array.isArray(data.rows))
         return resolve({
