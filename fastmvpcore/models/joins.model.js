@@ -2,21 +2,12 @@ const connectionDb = require("../../config/postgresdb");
 module.exports = {
   async innerJoin(tables, dataJson) {
     return new Promise(async (resolve, reject) => {
-      if (!tables?.table1 || !tables?.table2) {
+      if (!tables?.table1 || !tables?.table2 || !dataJson?.keys || Object.values(dataJson.keys).length == 0) {
         return reject({
           status: "error",
-          msg: "tables undefined",
+          msg: !tables?.table1 ? "tables undefined" : "keys undefined",
           error: {
-            code: "tableundefined",
-          },
-        });
-      }
-      if (!dataJson?.keys || Object.values(dataJson.keys).length == 0) {
-        return reject({
-          status: "error",
-          msg: "keys undefined",
-          error: {
-            code: "keysundefined",
+            code: !tables?.table1 ? "tableundefined" : "keysundefined",
           },
         });
       }
@@ -31,23 +22,9 @@ module.exports = {
         Object.keys(dataJson.keys)[0]
       )} = ${table2}.${sanitationStringSql(Object.values(dataJson.keys)[0])}`;
       console.log("queryString", queryString);
-      let data;
-      if (dataJson.filters) {
-        data = await connection
-          .query(queryString, Object.values(dataJson.filters))
-          .catch((err) => {
-            console.error(
-              `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
-              err
-            );
-            return {
-              status: "error",
-              msg: "db",
-              error: err,
-            };
-          });
-      } else {
-        data = await connection.query(queryString).catch((err) => {
+      const data = await connection
+        .query(queryString)
+        .catch((err) => {
           console.error(
             `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
             err
@@ -58,10 +35,8 @@ module.exports = {
             error: err,
           };
         });
-      }
-
       connection.end();
-      if (data?.rows?.length && data.rows.length > 0)
+      if (Array.isArray(data.rows))
         return resolve({
           status: "ok",
           msg: "done",
@@ -112,12 +87,10 @@ module.exports = {
         Object.values(dataJson.keys)[0]
       )} WHERE ${table2}.${sanitationStringSql(
         Object.values(dataJson.keys)[0]
-      )}=${sanitationStringSql(Object.values(dataJson)[0])}`;
+      )}=$1`;
       console.log("queryString", queryString);
-      let data;
-      if (dataJson.filters) {
-        data = await connection
-          .query(queryString, Object.values(dataJson.filters))
+      const data = await connection
+          .query(queryString, [sanitationStringSql(dataJson.value)])
           .catch((err) => {
             console.error(
               `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
@@ -129,22 +102,8 @@ module.exports = {
               error: err,
             };
           });
-      } else {
-        data = await connection.query(queryString).catch((err) => {
-          console.error(
-            `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
-            err
-          );
-          return {
-            status: "error",
-            msg: "db",
-            error: err,
-          };
-        });
-      }
-
       connection.end();
-      if (data?.rows?.length && data.rows.length > 0)
+      if (Array.isArray(data.rows))
         return resolve({
           status: "ok",
           msg: "done",
@@ -195,39 +154,24 @@ module.exports = {
         Object.values(dataJson.keys)[0]
       )} WHERE ${table1}.${sanitationStringSql(
         Object.keys(dataJson.keys)[0]
-      )}=${sanitationStringSql(Object.values(dataJson)[0])}`;
+      )}=$1`;
       console.log("queryString", queryString);
-      let data;
-      if (dataJson.filters) {
-        data = await connection
-          .query(queryString, Object.values(dataJson.filters))
-          .catch((err) => {
-            console.error(
-              `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
-              err
-            );
-            return {
-              status: "error",
-              msg: "db",
-              error: err,
-            };
-          });
-      } else {
-        data = await connection.query(queryString).catch((err) => {
+      const data = await connection
+        .query(queryString, [sanitationStringSql(dataJson.value)])
+        .catch((err) => {
           console.error(
             `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
             err
           );
+          console.log("erro.rows",err.rows)
           return {
             status: "error",
             msg: "db",
             error: err,
           };
         });
-      }
-
       connection.end();
-      if (data?.rows?.length && data.rows.length > 0)
+      if (Array.isArray(data.rows))
         return resolve({
           status: "ok",
           msg: "done",
