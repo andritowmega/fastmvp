@@ -2,6 +2,24 @@ const connectionDb = require("../../config/postgresdb");
 module.exports = {
   async innerJoin(tables, dataJson) {
     return new Promise(async (resolve, reject) => {
+      if (!tables?.table1 || !tables?.table2) {
+        return reject({
+          status: "error",
+          msg: "tables undefined",
+          error: {
+            code: "tableundefined",
+          },
+        });
+      }
+      if (!dataJson?.keys || Object.values(dataJson.keys).length == 0) {
+        return reject({
+          status: "error",
+          msg: "keys undefined",
+          error: {
+            code: "keysundefined",
+          },
+        });
+      }
       const connection = connectionDb();
       const { makeSqlStringSelect } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
@@ -10,8 +28,8 @@ module.exports = {
       let queryString = `SELECT ${makeSqlStringSelect(
         dataJson
       )} FROM ${table1} INNER JOIN ${table2} ON ${table1}.${sanitationStringSql(
-        dataJson.keys.left
-      )} = ${table2}.${sanitationStringSql(dataJson.keys.right)}`;
+        Object.keys(dataJson.keys)[0]
+      )} = ${table2}.${sanitationStringSql(Object.values(dataJson.keys)[0])}`;
       console.log("queryString", queryString);
       let data;
       if (dataJson.filters) {
@@ -53,8 +71,34 @@ module.exports = {
     });
   },
   async innerJoinValueRight(tables, dataJson) {
-    console.log("datajson",dataJson);
     return new Promise(async (resolve, reject) => {
+      if (!tables?.table1 || !tables?.table2) {
+        return reject({
+          status: "error",
+          msg: "tables undefined",
+          error: {
+            code: "tableundefined",
+          },
+        });
+      }
+      if (!dataJson?.keys || Object.values(dataJson.keys).length == 0) {
+        return reject({
+          status: "error",
+          msg: "keys undefined",
+          error: {
+            code: "keysundefined",
+          },
+        });
+      }
+      if (!dataJson?.value) {
+        return reject({
+          status: "error",
+          msg: "value undefined",
+          error: {
+            code: "valueundefined",
+          },
+        });
+      }
       const connection = connectionDb();
       const { makeSqlStringSelect } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
@@ -63,11 +107,11 @@ module.exports = {
       let queryString = `SELECT ${makeSqlStringSelect(
         dataJson
       )} FROM ${table1} INNER JOIN ${table2} ON ${table1}.${sanitationStringSql(
-        dataJson.keys.left
+        Object.keys(dataJson.keys)[0]
       )} = ${table2}.${sanitationStringSql(
-        dataJson.keys.right
-      )} WHERE ${table1}.${sanitationStringSql(
-        Object.keys(dataJson)[0]
+        Object.values(dataJson.keys)[0]
+      )} WHERE ${table2}.${sanitationStringSql(
+        Object.values(dataJson.keys)[0]
       )}=${sanitationStringSql(Object.values(dataJson)[0])}`;
       console.log("queryString", queryString);
       let data;
@@ -111,6 +155,33 @@ module.exports = {
   },
   async innerJoinValueLeft(tables, dataJson) {
     return new Promise(async (resolve, reject) => {
+      if (!tables?.table1 || !tables?.table2) {
+        return reject({
+          status: "error",
+          msg: "tables undefined",
+          error: {
+            code: "tableundefined",
+          },
+        });
+      }
+      if (!dataJson?.keys || Object.values(dataJson.keys).length == 0) {
+        return reject({
+          status: "error",
+          msg: "keys undefined",
+          error: {
+            code: "keysundefined",
+          },
+        });
+      }
+      if (!dataJson?.value) {
+        return reject({
+          status: "error",
+          msg: "value undefined",
+          error: {
+            code: "valueundefined",
+          },
+        });
+      }
       const connection = connectionDb();
       const { makeSqlStringSelect } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
@@ -119,12 +190,12 @@ module.exports = {
       let queryString = `SELECT ${makeSqlStringSelect(
         dataJson
       )} FROM ${table1} INNER JOIN ${table2} ON ${table1}.${sanitationStringSql(
-        dataJson.keys.left
+        Object.keys(dataJson.keys)[0]
       )} = ${table2}.${sanitationStringSql(
-        dataJson.keys.right
-      )} WHERE ${table2}.${sanitationStringSql(
-        dataJson.value.key
-      )}=${sanitationStringSql(dataJson.value.value)}`;
+        Object.values(dataJson.keys)[0]
+      )} WHERE ${table1}.${sanitationStringSql(
+        Object.keys(dataJson.keys)[0]
+      )}=${sanitationStringSql(Object.values(dataJson)[0])}`;
       console.log("queryString", queryString);
       let data;
       if (dataJson.filters) {

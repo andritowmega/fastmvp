@@ -1,7 +1,6 @@
 module.exports = {
   sanitationStringSql(data) {
-    console.log("data",data)
-    if(data){
+    if(data && typeof data === 'string'){
       const cleanData = data
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -33,7 +32,7 @@ module.exports = {
           code: errJson.error.code,
           detail: errJson.error.detail,
           data: null,
-        }
+        },
       };
     } else if (errJson.error.code == "23502") {
       return {
@@ -44,7 +43,18 @@ module.exports = {
           code: errJson.error.code,
           detail: errJson.error.detail,
           data: null,
-        }
+        },
+      };
+    } else if (errJson.error.code == "42703") {
+      return {
+        conditional: true,
+        payload: {
+          status: "error",
+          msg: "Un campo no existe en la tabla o puede que te refieras a otra tabla",
+          code: errJson.error.code,
+          detail: errJson.error.detail,
+          data: errJson.error.hint,
+        },
       };
     } else if (errJson.error.code == "outrange") {
       return {
@@ -57,7 +67,7 @@ module.exports = {
           data: null,
         },
       };
-    } else if (errJson.error.code == "valuesJson"){
+    } else if (errJson.error.code == "valuesJson") {
       return {
         conditional: true,
         payload: {
@@ -68,7 +78,40 @@ module.exports = {
           data: null,
         },
       };
-    }
+    } else if (errJson.error.code == "tableundefined") {
+      return {
+        conditional: true,
+        payload: {
+          status: "error",
+          msg: "No se ha recibido el nombre de la tabla",
+          code: errJson.error.code,
+          detail: null,
+          data: null,
+        },
+      };
+    } else if (errJson.error.code == "keysundefined") {
+      return {
+        conditional: true,
+        payload: {
+          status: "error",
+          msg: "No se han recibido las keys para la búsqueda",
+          code: errJson.error.code,
+          detail: null,
+          data: null,
+        },
+      };
+    } else if (errJson.error.code == "valueundefined") {
+      return {
+        conditional: true,
+        payload: {
+          status: "error",
+          msg: "No se ha enviado value para la consulta",
+          code: errJson.error.code,
+          detail: null,
+          data: null,
+        },
+      };
+    } 
       return {
         conditional: false,
         payload: errJson,
