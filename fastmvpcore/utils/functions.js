@@ -1,6 +1,9 @@
 module.exports = {
   sanitationStringSql(data) {
-    if(data && typeof data === 'string'){
+    if (data && (typeof data === "string" || typeof data === "number")) {
+      if (data && typeof data === "number") {
+        data = data.toString();
+      }
       const cleanData = data
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
