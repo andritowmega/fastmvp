@@ -1,10 +1,6 @@
 class FastMvpController {
   static async Create(req, res) {
-    const {
-      create,
-      innerJoinLeft,
-      innerJoinRight,
-    } = require("../services/allfunctions.service");
+    const {create} = require("../services/allfunctions.service");
     const response = await create(req.params.table, req.body).catch((e) => {
       console.error("FastMvp Controller: can't create", e);
       return e;
@@ -25,8 +21,9 @@ class FastMvpController {
     return res.json(response).status(500);
   }
   static async Get(req, res) {
+    console.log("params",req.params)
     const { get } = require("../services/allfunctions.service");
-    const response = await get(req.params.table, req.body).catch((e) => {
+    const response = await get(req.params.project, req.params.table, req.body).catch((e) => {
       console.error("FastMvp Controller: can't get", e);
       return e;
     });

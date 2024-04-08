@@ -26,8 +26,8 @@ module.exports = {
       };
     }
   },
-  async get(table, data) {
-    const create = await AllTablesModel.get(table, data).catch((e) => {
+  async get(project, table, data) {
+    const create = await AllTablesModel.get(project, table, data).catch((e) => {
       console.error("SERVICE AllFunctions: can not get", e);
       return e;
     });

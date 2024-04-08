@@ -1,8 +1,8 @@
 const connectionDb = require("../../config/postgresdb");
 module.exports = {
-  async create(table, dataJson) {
+  async create(project, table, dataJson) {
     return new Promise(async (resolve, reject) => {
-      const connection = connectionDb();
+      const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
       const { makeSqlStringInsert } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       const queryString =
@@ -29,24 +29,23 @@ module.exports = {
       return reject(data);
     });
   },
-  async get(table, dataJson) {
+  async get(project, table, dataJson) {
     return new Promise(async (resolve, reject) => {
-      const connection = connectionDb();
+      const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
       const { makeSqlStringSelect } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
-      let queryString =
-        `SELECT ${makeSqlStringSelect(dataJson)} FROM ${sanitationStringSql(table)} `
+      let queryString = `SELECT ${makeSqlStringSelect(
+        dataJson
+      )} FROM ${sanitationStringSql(table)} `;
       console.log("queryString", queryString);
-      const data = await connection
-        .query(queryString)
-        .catch((err) => {
-          console.error("MODEL AllTablesCrud: Can not select - ", err);
-          return {
-            status: "error",
-            msg: "db",
-            error: err,
-          };
-        });
+      const data = await connection.query(queryString).catch((err) => {
+        console.error("MODEL AllTablesCrud: Can not select - ", err);
+        return {
+          status: "error",
+          msg: "db",
+          error: err,
+        };
+      });
       connection.end();
       if (data?.rows?.length)
         return resolve({
@@ -57,9 +56,9 @@ module.exports = {
       return reject(data);
     });
   },
-  async update(table, dataJson, condition) {
+  async update(project, table, dataJson, condition) {
     return new Promise(async (resolve, reject) => {
-      const connection = connectionDb();
+      const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
       const { makeSqlStringUpdate } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       const queryString = `UPDATE  ${sanitationStringSql(
@@ -100,9 +99,9 @@ module.exports = {
       return reject(data);
     });
   },
-  async delete(table, condition) {
+  async delete(project, table, condition) {
     return new Promise(async (resolve, reject) => {
-      const connection = connectionDb();
+      const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
       const { makeSqlStringDelete } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       const queryString = `DELETE FROM ${sanitationStringSql(

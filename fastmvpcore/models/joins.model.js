@@ -1,8 +1,13 @@
 const connectionDb = require("../../config/postgresdb");
 module.exports = {
-  async innerJoin(tables, dataJson) {
+  async innerJoin(project, tables, dataJson) {
     return new Promise(async (resolve, reject) => {
-      if (!tables?.table1 || !tables?.table2 || !dataJson?.keys || Object.values(dataJson.keys).length == 0) {
+      if (
+        !tables?.table1 ||
+        !tables?.table2 ||
+        !dataJson?.keys ||
+        Object.values(dataJson.keys).length == 0
+      ) {
         return reject({
           status: "error",
           msg: !tables?.table1 ? "tables undefined" : "keys undefined",
@@ -11,7 +16,7 @@ module.exports = {
           },
         });
       }
-      const connection = connectionDb();
+      const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
       const { makeSqlStringSelect } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       const table1 = sanitationStringSql(tables.table1);
@@ -22,19 +27,17 @@ module.exports = {
         Object.keys(dataJson.keys)[0]
       )} = ${table2}.${sanitationStringSql(Object.values(dataJson.keys)[0])}`;
       console.log("queryString", queryString);
-      const data = await connection
-        .query(queryString)
-        .catch((err) => {
-          console.error(
-            `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
-            err
-          );
-          return {
-            status: "error",
-            msg: "db",
-            error: err,
-          };
-        });
+      const data = await connection.query(queryString).catch((err) => {
+        console.error(
+          `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
+          err
+        );
+        return {
+          status: "error",
+          msg: "db",
+          error: err,
+        };
+      });
       connection.end();
       if (Array.isArray(data.rows))
         return resolve({
@@ -45,7 +48,7 @@ module.exports = {
       return reject(data);
     });
   },
-  async innerJoinValueRight(tables, dataJson) {
+  async innerJoinValueRight(project, tables, dataJson) {
     return new Promise(async (resolve, reject) => {
       if (!tables?.table1 || !tables?.table2) {
         return reject({
@@ -74,7 +77,7 @@ module.exports = {
           },
         });
       }
-      const connection = connectionDb();
+      const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
       const { makeSqlStringSelect } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       const table1 = sanitationStringSql(tables.table1);
@@ -112,7 +115,7 @@ module.exports = {
       return reject(data);
     });
   },
-  async innerJoinValueLeft(tables, dataJson) {
+  async innerJoinValueLeft(project, tables, dataJson) {
     return new Promise(async (resolve, reject) => {
       if (!tables?.table1 || !tables?.table2) {
         return reject({
@@ -141,7 +144,7 @@ module.exports = {
           },
         });
       }
-      const connection = connectionDb();
+      const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
       const { makeSqlStringSelect } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       const table1 = sanitationStringSql(tables.table1);
@@ -163,7 +166,7 @@ module.exports = {
             `MODEL Joins: Can not execute InnerJoin ON ${table1} and ${table2} `,
             err
           );
-          console.log("erro.rows",err.rows)
+          console.log("erro.rows", err.rows);
           return {
             status: "error",
             msg: "db",

@@ -16,9 +16,14 @@ if (process.env.STR_DB) {
         port: 5432
     }
     */
-  optionsConnetion = require("./configDev.json");
+  optionsConnetion = require("./configDb.json");
 }
 
-module.exports = () => {
-  return new Pool(optionsConnetion);
+module.exports = (dbFind) => {
+  var dbSelected = optionsConnetion[dbFind];
+  if(dbSelected?.connection){
+    return new Pool(dbSelected.connection);
+  }else{
+    return null;
+  }
 };
