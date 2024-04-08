@@ -1,11 +1,13 @@
 const AllTablesModel = require("../models/alltablescrud.model");
 const JoinsModel = require("../models/joins.model");
 module.exports = {
-  async create(table, dataJson) {
-    const create = await AllTablesModel.create(table, dataJson).catch((e) => {
-      console.error("SERVICE AllFunctions: can not create", e);
-      return e;
-    });
+  async create(project, table, dataJson) {
+    const create = await AllTablesModel.create(project, table, dataJson).catch(
+      (e) => {
+        console.error("SERVICE AllFunctions: can not create", e);
+        return e;
+      }
+    );
     if (create?.status && create.status == "ok") {
       return {
         status: "ok",
@@ -51,8 +53,9 @@ module.exports = {
       };
     }
   },
-  async update(table, dataJson, condition) {
+  async update(project, table, dataJson, condition) {
     const updateResponse = await AllTablesModel.update(
+      project,
       table,
       dataJson,
       condition
@@ -60,7 +63,6 @@ module.exports = {
       console.error("SERVICE AllFunctions: can not update", e);
       return e;
     });
-    console.log("update", updateResponse);
     if (updateResponse?.status && updateResponse.status == "ok") {
       return {
         status: "ok",
@@ -81,13 +83,11 @@ module.exports = {
       };
     }
   },
-  async deletePg(table, condition) {
-    const deleteResponse = await AllTablesModel.delete(table, condition).catch(
-      (e) => {
-        console.error("SERVICE AllFunctions: can not delete", e);
-        return e;
-      }
-    );
+  async deletePg(project, table, condition) {
+    const deleteResponse = await AllTablesModel.delete(project,table,condition).catch((e) => {
+      console.error("SERVICE AllFunctions: can not delete", e);
+      return e;
+    });
     if (deleteResponse?.status && deleteResponse.status == "ok") {
       return {
         status: "ok",
@@ -107,33 +107,8 @@ module.exports = {
       data: null,
     };
   },
-  async innerJoin(tables, dataJson) {
-    const create = await JoinsModel.innerJoin(tables, dataJson).catch((e) => {
-      console.error("SERVICE AllFunctions: can not execute innerJoin", e);
-      return e;
-    });
-    if (create?.status && create.status == "ok") {
-      return {
-        status: "ok",
-        msg: "Datos obtenidos",
-        data: create.data,
-      };
-    } else {
-      if (create?.error?.code) {
-        const { errorControlWithSqlCode } = require("../utils/functions");
-        let formatError = errorControlWithSqlCode(create, tables.table1);
-        if (formatError.conditional) return formatError.payload;
-      }
-      return {
-        status: "error",
-        msg: "Error desconocido",
-        code: 500,
-        data: null,
-      };
-    }
-  },
-  async innerJoinLeft(tables, dataJson) {
-    const create = await JoinsModel.innerJoinValueLeft(tables, dataJson).catch(
+  async innerJoin(project, tables, dataJson) {
+    const create = await JoinsModel.innerJoin(project, tables, dataJson).catch(
       (e) => {
         console.error("SERVICE AllFunctions: can not execute innerJoin", e);
         return e;
@@ -159,11 +134,40 @@ module.exports = {
       };
     }
   },
-  async innerJoinRight(tables, dataJson) {
-    const create = await JoinsModel.innerJoinValueRight(tables, dataJson).catch((e) => {
-      console.error("SERVICE AllFunctions: can not execute innerJoin", e);
-      return e;
-    });
+  async innerJoinLeft(project, tables, dataJson) {
+    const create = await JoinsModel.innerJoinValueLeft(project, tables, dataJson).catch(
+      (e) => {
+        console.error("SERVICE AllFunctions: can not execute innerJoin", e);
+        return e;
+      }
+    );
+    if (create?.status && create.status == "ok") {
+      return {
+        status: "ok",
+        msg: "Datos obtenidos",
+        data: create.data,
+      };
+    } else {
+      if (create?.error?.code) {
+        const { errorControlWithSqlCode } = require("../utils/functions");
+        let formatError = errorControlWithSqlCode(create, tables.table1);
+        if (formatError.conditional) return formatError.payload;
+      }
+      return {
+        status: "error",
+        msg: "Error desconocido",
+        code: 500,
+        data: null,
+      };
+    }
+  },
+  async innerJoinRight(project, tables, dataJson) {
+    const create = await JoinsModel.innerJoinValueRight(project, tables, dataJson).catch(
+      (e) => {
+        console.error("SERVICE AllFunctions: can not execute innerJoin", e);
+        return e;
+      }
+    );
     if (create?.status && create.status == "ok") {
       return {
         status: "ok",

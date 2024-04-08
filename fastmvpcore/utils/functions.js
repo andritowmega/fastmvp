@@ -114,6 +114,17 @@ module.exports = {
           data: null,
         },
       };
+    } else if (errJson.error.code == "wrongproject") {
+      return {
+        conditional: true,
+        payload: {
+          status: "error",
+          msg: "El proyecto no existe",
+          code: errJson.error.code,
+          detail: null,
+          data: null,
+        },
+      };
     } 
       return {
         conditional: false,

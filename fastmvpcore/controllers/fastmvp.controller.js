@@ -1,7 +1,7 @@
 class FastMvpController {
   static async Create(req, res) {
     const {create} = require("../services/allfunctions.service");
-    const response = await create(req.params.table, req.body).catch((e) => {
+    const response = await create(req.params.project, req.params.table, req.body).catch((e) => {
       console.error("FastMvp Controller: can't create", e);
       return e;
     });
@@ -21,7 +21,6 @@ class FastMvpController {
     return res.json(response).status(500);
   }
   static async Get(req, res) {
-    console.log("params",req.params)
     const { get } = require("../services/allfunctions.service");
     const response = await get(req.params.project, req.params.table, req.body).catch((e) => {
       console.error("FastMvp Controller: can't get", e);
@@ -50,7 +49,7 @@ class FastMvpController {
           value: req.params.value,
         }
       : null;
-    const response = await update(req.params.table, req.body, condition).catch(
+    const response = await update(req.params.project, req.params.table, req.body, condition).catch(
       (e) => {
         console.error("FastMvp Controller: can't update", e);
         return e;
@@ -69,8 +68,7 @@ class FastMvpController {
           value: req.params.value,
         }
       : null;
-    console.log("condition", condition);
-    const response = await deletePg(req.params.table, condition).catch((e) => {
+    const response = await deletePg(req.params.project, req.params.table, condition).catch((e) => {
       console.error("FastMvp Controller: can't delete", e);
       return e;
     });
@@ -86,7 +84,7 @@ class FastMvpController {
         table1: req.params.table1,
         table2: req.params.table2,
       };
-      const response = await innerJoin(tables, req.body).catch((e) => {
+      const response = await innerJoin(req.params.project, tables, req.body).catch((e) => {
         console.error("FastMvp Controller: can't execute InnerJoin", e);
         return e;
       });
@@ -110,7 +108,7 @@ class FastMvpController {
         table1: req.params.table1,
         table2: req.params.table2,
       };
-      const response = await innerJoinLeft(tables, req.body).catch((e) => {
+      const response = await innerJoinLeft(req.params.project, tables, req.body).catch((e) => {
         console.error("FastMvp Controller: can't execute InnerJoin", e);
         return e;
       });
@@ -134,7 +132,7 @@ class FastMvpController {
         table1: req.params.table1,
         table2: req.params.table2,
       };
-      const response = await innerJoinRight(tables, req.body).catch((e) => {
+      const response = await innerJoinRight(req.params.project, tables, req.body).catch((e) => {
         console.error("FastMvp Controller: can't execute InnerJoin", e);
         return e;
       });
