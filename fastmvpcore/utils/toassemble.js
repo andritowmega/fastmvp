@@ -1,6 +1,12 @@
 module.exports = {
   makeSqlStringInsert(dataJson) {
     if (Object.keys(dataJson)?.length && Object.keys(dataJson)?.length > 0) {
+      console.log("datajson",dataJson);
+      if('password' in dataJson){
+        const bcrypt = require("bcryptjs");
+        dataJson.password = bcrypt.hashSync(dataJson.password,8);
+      }
+      console.log("datajson",dataJson);
       let namesString = Object.keys(dataJson).join(", ");
       let valuesArray = Object.values(dataJson);
       let response = "(" + namesString + ")";
