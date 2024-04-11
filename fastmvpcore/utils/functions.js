@@ -157,6 +157,9 @@ const functionsModule = {
       }
     }
     return null;
-  }
+  },
+  isNoEmptyJSON(obj) {
+    return typeof obj === 'object' && obj !== null && JSON.stringify(obj) !== '{}';
+  }  
 };
 module.exports = functionsModule;
