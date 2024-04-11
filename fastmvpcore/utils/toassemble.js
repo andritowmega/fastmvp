@@ -45,6 +45,19 @@ const toAssenbleModule = {
       return response;
     }
     return ` * `;
+  },
+  makeSqlStringSelectWhere(dataJson) {
+    const { isNoEmptyJSON } = require("../utils/functions");
+    if (dataJson?.where && isNoEmptyJSON(dataJson.where) && dataJson.where.conditional && isNoEmptyJSON(dataJson.where.conditional)) {
+      if(dataJson.where.type){
+        if(dataJson.where.type=="iqual"){
+          return ` WHERE ${Object.keys(dataJson.where.conditional)[0]}='${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}'`;
+        }else if(dataJson.where.type=="like"){
+          return ` WHERE ${Object.keys(dataJson.where.conditional)[0]} LIKE '%${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}%'`;
+        }
+      }
+    }
+    return ``;
   }
 };
 module.exports = toAssenbleModule;
