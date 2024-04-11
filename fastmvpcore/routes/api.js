@@ -9,6 +9,8 @@ router.get('/', function(req, res, next) {
 
 /* POST api listing. */
 router.post("/:project/orderedlist", FastMvpController.OrderedList);
+router.post("/:project/auth/:table/token/make", FastMvpController.MakeToken);
+router.post("/:project/auth/:table/token/login", FastMvpController.LoginToken);
 router.post("/:project/:table/get", FastMvpController.Get);
 router.post("/:project/:table/create", FastMvpController.Create);
 router.post("/:project/:table/update/all", FastMvpController.Update);

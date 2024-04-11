@@ -263,6 +263,31 @@ const servicesModule = {
       code: 500,
       data: null,
     };
+  },
+  async loginToken(){
+    const get = await AllTablesModel.get(project, table, data).catch((e) => {
+      console.error("SERVICE AllFunctions: can not get", e);
+      return e;
+    });
+    if (get?.status && get.status == "ok") {
+      return {
+        status: "ok",
+        msg: "Datos obtenidos",
+        data: get.data,
+      };
+    } else {
+      if (get?.error?.code) {
+        const { errorControlWithSqlCode } = require("../utils/functions");
+        let formatError = errorControlWithSqlCode(get, table);
+        if (formatError.conditional) return formatError.payload;
+      }
+      return {
+        status: "error",
+        msg: "Error desconocido",
+        code: 500,
+        data: null,
+      };
+    }
   }
 };
 

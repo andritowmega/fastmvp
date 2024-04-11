@@ -160,5 +160,11 @@ class FastMvpController {
       }
       return res.json(response).status(500);
   }
+  static async MakeToken(req,res){
+
+  }
+  static async LoginToken(req,res){
+    
+  }
 }
 module.exports = FastMvpController;
