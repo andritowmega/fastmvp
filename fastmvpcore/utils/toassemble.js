@@ -1,4 +1,4 @@
-module.exports = {
+const toAssenbleModule = {
   makeSqlStringInsert(dataJson) {
     if (Object.keys(dataJson)?.length && Object.keys(dataJson)?.length > 0) {
       if('password' in dataJson){
@@ -45,5 +45,6 @@ module.exports = {
       return response;
     }
     return ` * `;
-  },
+  }
 };
+module.exports = toAssenbleModule;

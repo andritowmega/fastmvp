@@ -189,8 +189,6 @@ const servicesModule = {
     }
   },
   async orderedList(project,data){
-    console.log("creat",project)
-
     if(data?.orderedList && Array.isArray(data.orderedList)){
       var response = new Array();
       for(let singleQuery of data.orderedList){
@@ -210,6 +208,8 @@ const servicesModule = {
           });
           continue;
         } 
+        const { useReplace } = require('../utils/functions');
+        data.orderedList = useReplace(singleQuery,response);
         if(singleQuery.type=="create"){
           let createResponse = await servicesModule.create(project,singleQuery.in,singleQuery.body).catch(
             (e) => {
@@ -229,7 +229,7 @@ const servicesModule = {
             }
           )
           let dataJson = {};
-          dataJson[singleQuery.in]=getResponse
+          dataJson[singleQuery.in]=getResponse;
           response.push(dataJson);
           continue;
         }else if(singleQuery.type=="delete"){
