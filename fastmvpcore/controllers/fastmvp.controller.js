@@ -149,5 +149,16 @@ class FastMvpController {
       })
       .status(404);
   }
+  static async OrderedList(req, res) {
+    const { orderedList } = require("../services/allfunctions.service");
+      const response = await orderedList(req.params.project, req.body).catch((e) => {
+        console.error("FastMvp Controller: can't execute InnerJoin", e);
+        return e;
+      });
+      if (response?.status && response.status == "ok") {
+        return res.json(response).status(200);
+      }
+      return res.json(response).status(500);
+  }
 }
 module.exports = FastMvpController;

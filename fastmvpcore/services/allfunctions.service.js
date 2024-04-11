@@ -1,6 +1,6 @@
 const AllTablesModel = require("../models/alltablescrud.model");
 const JoinsModel = require("../models/joins.model");
-module.exports = {
+const servicesModule = {
   async create(project, table, dataJson) {
     const create = await AllTablesModel.create(project, table, dataJson).catch(
       (e) => {
@@ -188,4 +188,82 @@ module.exports = {
       };
     }
   },
+  async orderedList(project,data){
+    console.log("creat",project)
+
+    if(data?.orderedList && Array.isArray(data.orderedList)){
+      var response = new Array();
+      for(let singleQuery of data.orderedList){
+        if(!singleQuery?.type) {
+          response.push({
+            status: "error",
+            msg: "El parametro Type no fue enviado",
+            data: null,
+          });
+          continue;
+        }
+        if(!singleQuery?.body){
+          response.push({
+            status: "error",
+            msg: "El parametro body no fue enviado",
+            data: null,
+          });
+          continue;
+        } 
+        if(singleQuery.type=="create"){
+          let createResponse = await servicesModule.create(project,singleQuery.in,singleQuery.body).catch(
+            (e) => {
+              console.error("SERVICE AllFunctions: can not create on OrderedList", e);
+              return e;
+            }
+          );
+          let dataJson = {};
+          dataJson[singleQuery.in]=createResponse
+          response.push(dataJson);
+          continue;
+        }else if(singleQuery.type=="get"){
+          let getResponse = await servicesModule.get(project,singleQuery.in,singleQuery.body).catch(
+            (e) => {
+              console.error("SERVICE AllFunctions: can not Get on OrderedList", e);
+              return e;
+            }
+          )
+          let dataJson = {};
+          dataJson[singleQuery.in]=getResponse
+          response.push(dataJson);
+          continue;
+        }else if(singleQuery.type=="delete"){
+          let deleteResponse = await servicesModule.deletePg(project,singleQuery.in,singleQuery.body).catch(
+            (e) => {
+              console.error("SERVICE AllFunctions: can not Delete on OrderedList", e);
+              return e;
+            }
+          )
+          let dataJson = {};
+          dataJson[singleQuery.in]=deleteResponse
+          response.push(dataJson);
+          continue;
+        }
+        return response.push({
+          status: "error",
+          msg: "Error desconocido",
+          code: 500,
+          data: null,
+        });
+      };
+      return {
+        status: "ok",
+        msg: "Consultas ordenadas",
+        data: response,
+      }
+    }
+    return {
+      status: "error",
+      msg: "Error desconocido",
+      code: 500,
+      data: null,
+    };
+  }
 };
+
+module.exports = servicesModule;
