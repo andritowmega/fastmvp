@@ -264,16 +264,48 @@ const servicesModule = {
       data: null,
     };
   },
-  async loginToken(){
-    const get = await AllTablesModel.get(project, table, data).catch((e) => {
+  async loginToken(project,table,body){
+    const {isNoEmptyJSON} = require("../utils/functions");
+    if(!body?.where && !isNoEmptyJSON(body.where)){
+      return {
+        status: "error",
+        msg: "No se ha enviado los datos correcto en check.where",
+        code: 500,
+        data: null,
+      };
+    }
+    console.log("body",body)
+    body.where.type="iqual";
+    const get = await AllTablesModel.get(project, table, body).catch((e) => {
       console.error("SERVICE AllFunctions: can not get", e);
       return e;
     });
+    console.log("get",get);
     if (get?.status && get.status == "ok") {
+      if(get.data.length==0) return {
+        status:"error",
+        msg:"Credenciales incorrectas",
+        data: null
+      }
+      const {newTokenUser,comparePassword} = require("../utils/auth");
+      const checkPassword = await comparePassword(body.password,get.data[0].password).catch(e=>{
+        console.error("ALLFUNCTIONS Login Module: i can't compare password",e);
+        return null;
+      })
+      if(checkPassword){
+        const dataToken = await newTokenUser(get.data[0],body.lifetimedays);
+        return {
+          status: "ok",
+          msg: "Bienvenido de nuevo",
+          data: {
+            token: dataToken
+          }
+        };
+      }
       return {
-        status: "ok",
-        msg: "Datos obtenidos",
-        data: get.data,
+        status: "error",
+        msg: "Contraseña Incorrecta",
+        data: null,
       };
     } else {
       if (get?.error?.code) {
@@ -283,12 +315,11 @@ const servicesModule = {
       }
       return {
         status: "error",
-        msg: "Error desconocido",
-        code: 500,
+        msg: "Credenciales incorrectas",
         data: null,
       };
     }
-  }
+  },
 };
 
 module.exports = servicesModule;
