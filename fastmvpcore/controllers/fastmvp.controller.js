@@ -160,5 +160,16 @@ class FastMvpController {
       }
       return res.json(response).status(500);
   }
+  static async CheckToken(req,res){
+    const { loginToken } = require("../services/allfunctions.service");
+    const response = await loginToken(req.params.project,req.params.table,req.body).catch((e) => {
+      console.error("FastMvp Controller: can't execute LoginToken", e);
+      return e;
+    });
+    if (response?.status && response.status == "ok") {
+      return res.json(response).status(200);
+    }
+    return res.json(response).status(500);
+  }
 }
 module.exports = FastMvpController;

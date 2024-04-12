@@ -1,17 +1,15 @@
 const jwt = require("jsonwebtoken");
-const configtoken = require("../config/token");
+const configtoken = require("../../config/token");
 const moment = require("moment");
 const keypass = 30; //cuantos digitos aumentar al token
 
 module.exports = {
-  newTokenUser: async function (user, infouser) {
-    const payload = {
-      idprofile: user.idprofile,
-      emailprofile: user.email,
-      fullname: infouser.names + " " + infouser.surnames,
-      exp: moment().add(180, "days").unix(),
-    };
-    return jwt.sign(payload, configtoken.TOKEN_SECRET_USER);
+  newTokenUser: async function (data,expiration) {
+    if('password' in data){
+      delete data.password;
+    }
+    data.exp = moment().add(expiration, "days").unix();
+    return jwt.sign(data, configtoken.TOKEN_SECRET_USER);
   },
 
   newTokenAdmin: async function (admin) {
