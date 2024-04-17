@@ -23,7 +23,17 @@ const toAssenbleModule = {
     if (Object.keys(dataJson)?.length && Object.keys(dataJson)?.length > 0) {
       let namesString = Object.keys(dataJson);
       let response = namesString
-        .map((name, index) => `${name}=$${index + 1}`)
+        .map((name, index) => {
+            if(typeof dataJson[name] === 'string'){
+                if(dataJson[name].includes("PLUS::")){
+                    return `${name}=${name} + ${dataJson[name].replace("PLUS::", "")}`
+                }else if(dataJson[name].includes("MINUS::")){
+                    return `${name}=${name} - ${dataJson[name].replace("MINUS::", "")}`
+                }
+            }
+            return `${name}=$${index + 1}`
+        }
+            )
         .join(", ");
       response += condition
         ? ` WHERE ${condition.key} = ${condition.value}`
@@ -32,7 +42,7 @@ const toAssenbleModule = {
       return response;
     }
     return null;
-  },
+ },
   makeSqlStringDelete(condition) {
     let response = ` WHERE ${condition.key} = ${condition.value}`;
     response += " RETURNING *";
