@@ -65,7 +65,10 @@ module.exports = {
     let needCheck = false;
     const { get } = require("../services/allfunctions.service");
     const response = await get(req.params.project,"accesstoken",{"filters":["tablename","access"]});
-    if(response?.code && response.code=="42P01") return next();
+    if(response?.code && response.code=="42P01"){
+      if(req.body.dtfmvp) delete req.body.dtfmvp;
+      return next();
+    }
     if(response?.status && response.status=="ok" && response.data && Array.isArray(response.data)){
       for(let i=0;i<response.data.length;i++){
         if(response.data[i].tablename==req.params.table && response.data[i].access) {
@@ -74,10 +77,13 @@ module.exports = {
         }
       }
     }
-    if(!needCheck) return next();
+    if(!needCheck) {
+      if(req.body.dtfmvp) delete req.body.dtfmvp;
+      return next();
+    }
     let tokenBrowser =
-      req.body.token ||
-      req.query.token ||
+      req.body.dtfmvp ||
+      req.query.dtfmvp ||
       req.headers["authorization"] ||
       req.cookies.dtfmvp;
 
@@ -110,6 +116,7 @@ module.exports = {
           });
         } else {
           req.datatoken = decoded;
+          if(req.body.dtfmvp) delete req.body.dtfmvp;
           return next();
         }
       }
