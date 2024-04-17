@@ -62,15 +62,32 @@ module.exports = {
   },
 
   authenticateUser: async function (req, res, next) {
+    let needCheck = false;
+    const { get } = require("../services/allfunctions.service");
+    const response = await get(req.params.project,"accesstoken",{"filters":["tablename","access"]});
+    if(response?.code && response.code=="42P01") return next();
+    if(response?.status && response.status=="ok" && response.data && Array.isArray(response.data)){
+      for(let i=0;i<response.data.length;i++){
+        if(response.data[i].tablename==req.params.table && response.data[i].access) {
+          needCheck=true;
+          break;
+        }
+      }
+    }
+    if(!needCheck) return next();
     let tokenBrowser =
       req.body.token ||
       req.query.token ||
       req.headers["authorization"] ||
-      req.cookies.dsu;
+      req.cookies.dtfmvp;
 
     if (!tokenBrowser) {
       req.datatoken = null;
-      return next();
+      return res.status(403).json({
+        status: "error",
+        msg: "Do not provide your token",
+        data: null,
+      });
     }
 
     const configToken = require("../../config/token");
@@ -86,7 +103,11 @@ module.exports = {
         if (err) {
           console.log("Error for validating user token", err.name);
           req.datatoken = null;
-          return next();
+          return res.status(403).json({
+            status: "error",
+            msg: "Invlid token",
+            data: null,
+          });
         } else {
           req.datatoken = decoded;
           return next();

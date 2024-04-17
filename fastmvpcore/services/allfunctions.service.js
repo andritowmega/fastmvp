@@ -274,7 +274,6 @@ const servicesModule = {
         data: null,
       };
     }
-    console.log("body",body)
     body.where.type="iqual";
     const get = await AllTablesModel.get(project, table, body).catch((e) => {
       console.error("SERVICE AllFunctions: can not get", e);
