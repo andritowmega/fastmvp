@@ -280,7 +280,6 @@ const servicesModule = {
       console.error("SERVICE AllFunctions: can not get", e);
       return e;
     });
-    console.log("get",get);
     if (get?.status && get.status == "ok") {
       if(get.data.length==0) return {
         status:"error",
