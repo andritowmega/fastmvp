@@ -26,14 +26,15 @@ const toAssenbleModule = {
         .map((name, index) => {
             if(typeof dataJson[name] === 'string'){
                 if(dataJson[name].includes("PLUS::")){
-                    return `${name}=${name} + ${dataJson[name].replace("PLUS::", "")}`
+                    dataJson[name] = dataJson[name].replace("PLUS::","");
+                    return `${name}=${name} + $${index + 1}`
                 }else if(dataJson[name].includes("MINUS::")){
-                    return `${name}=${name} - ${dataJson[name].replace("MINUS::", "")}`
+                    dataJson[name] = dataJson[name].replace("MINUS::","");
+                    return `${name}=${name} - $${index + 1}`
                 }
             }
             return `${name}=$${index + 1}`
-        }
-            )
+        })
         .join(", ");
       response += condition
         ? ` WHERE ${condition.key} = ${condition.value}`
