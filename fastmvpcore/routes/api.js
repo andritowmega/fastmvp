@@ -13,7 +13,6 @@ router.post("/:project/orderedlist",auth.authenticateUser, FastMvpController.Ord
 router.post("/:project/auth/:table/token/check",auth.authenticateUser, FastMvpController.CheckToken);
 router.post("/:project/:table/get",auth.authenticateUser, FastMvpController.Get);
 router.post("/:project/:table/create",auth.authenticateUser, FastMvpController.Create);
-router.post("/:project/:table/update/all",auth.authenticateUser, FastMvpController.Update);
 router.post("/:project/:table1/innerj/:table2",auth.authenticateUser, FastMvpController.InnerJoin);
 router.post("/:project/:table1/innerj/:table2/right",auth.authenticateUser, FastMvpController.InnerJoinRight);
 router.post("/:project/:table1/innerj/:table2/left",auth.authenticateUser, FastMvpController.InnerJoinLeft);

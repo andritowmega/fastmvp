@@ -54,6 +54,8 @@ const toAssenbleModule = {
           return ` WHERE ${Object.keys(dataJson.where.conditional)[0]}='${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}'`;
         }else if(dataJson.where.type=="like"){
           return ` WHERE ${Object.keys(dataJson.where.conditional)[0]} LIKE '%${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}%'`;
+        }else if(dataJson.where.type=="ilike"){
+          return ` WHERE ${Object.keys(dataJson.where.conditional)[0]} ILIKE '%${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}%'`;
         }
       }
     }
