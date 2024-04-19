@@ -50,6 +50,21 @@ const toAssenbleModule = {
     return response;
   },
   makeSqlStringSelect(datayJson) {
+    if(datayJson?.functions?.length && datayJson.functions.length > 0){
+      for(let i=0; i<datayJson.functions.length;i++){
+        if(datayJson.functions[i].includes("SUM::")){
+          datayJson.functions[i] = datayJson.functions[i].replace("SUM::","");
+          datayJson.functions[i] = `SUM(${datayJson.functions[i]})`;
+        }else if(datayJson.functions[i].includes("COUNT::")){
+          datayJson.functions[i] = datayJson.functions[i].replace("COUNT::","");
+          datayJson.functions[i] = `COUNT(${datayJson.functions[i]})`;
+        }else if(datayJson.functions[i].includes("AVG::")){
+          datayJson.functions[i] = datayJson.functions[i].replace("AVG::","");
+          datayJson.functions[i] = `AVG(${datayJson.functions[i]})`;
+        }
+      }
+      return datayJson.functions.join(", ");
+    }
     if (datayJson?.filters?.length && datayJson.filters.length > 0) {
       let namesString = datayJson.filters.join(", ");
       let response = `${namesString}`;
@@ -58,10 +73,13 @@ const toAssenbleModule = {
     return ` * `;
   },
   makeSqlStringSelectWhere(dataJson) {
-    const { isNoEmptyJSON } = require("../utils/functions");
+    const { isNoEmptyJSON,sanitationStringSql } = require("../utils/functions");
     if (dataJson?.where && isNoEmptyJSON(dataJson.where) && dataJson.where.conditional && isNoEmptyJSON(dataJson.where.conditional)) {
       if(dataJson.where.type){
         if(dataJson.where.type=="iqual"){
+          if(dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]] == "CURRENT_DATE"){
+            return ` WHERE ${sanitationStringSql(Object.keys(dataJson.where.conditional)[0])}=CURRENT_DATE`;
+          }
           return ` WHERE ${Object.keys(dataJson.where.conditional)[0]}='${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}'`;
         }else if(dataJson.where.type=="like"){
           return ` WHERE ${Object.keys(dataJson.where.conditional)[0]} LIKE '%${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}%'`;
