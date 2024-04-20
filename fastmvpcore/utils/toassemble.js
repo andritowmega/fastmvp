@@ -89,6 +89,9 @@ const toAssenbleModule = {
       if(dataJson.where.conditional && isNoEmptyJSON(dataJson.where.conditional)){
         return " WHERE " + toAssenbleModule.makeWhereConditional(dataJson.where);
       }
+      if(dataJson.where.range && isNoEmptyJSON(dataJson.where.range)){
+        return " WHERE " + toAssenbleModule.makeWhereConditional(dataJson.where);
+      }
     }
     return ``;
   },
@@ -104,10 +107,12 @@ const toAssenbleModule = {
         return `${Object.keys(conditional.conditional)[0]} LIKE '%${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}%'`;
       }else if(conditional.type=="ilike"){
         return `${Object.keys(conditional.conditional)[0]} ILIKE '%${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}%'`;
-      }else if("smallerthan"){
+      }else if(conditional.type=="smallerthan"){
         return `${Object.keys(conditional.conditional)[0]} < '${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
-      }else if("greater than"){
+      }else if(conditional.type=="greaterthan"){
         return `${Object.keys(conditional.conditional)[0]} > '${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
+      }else if(conditional.type=="between" && conditional.range){
+        return `${sanitationStringSql(conditional.row)} BETWEEN '${sanitationStringSql(conditional.range.first)}' AND '${sanitationStringSql(conditional.range.second)}'`;
       }
     }
   }
