@@ -74,21 +74,38 @@ const toAssenbleModule = {
   },
   makeSqlStringSelectWhere(dataJson) {
     const { isNoEmptyJSON,sanitationStringSql } = require("../utils/functions");
-    if (dataJson?.where && isNoEmptyJSON(dataJson.where) && dataJson.where.conditional && isNoEmptyJSON(dataJson.where.conditional)) {
-      if(dataJson.where.type){
-        if(dataJson.where.type=="iqual"){
-          if(dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]] == "CURRENT_DATE"){
-            return ` WHERE ${sanitationStringSql(Object.keys(dataJson.where.conditional)[0])}=CURRENT_DATE`;
+    if (dataJson?.where && isNoEmptyJSON(dataJson.where)) {
+      if(Array.isArray(dataJson.where.conditionals)){
+        let response = "";
+        for(let i=0;i<dataJson.where.conditionals.length;i++){
+          if(i%2==0){
+            response += ` ${toAssenbleModule.makeWhereConditional(dataJson.where.conditionals[i])} `;
+          }else{
+            response += ` ${sanitationStringSql(dataJson.where.conditionals[i])} `;
           }
-          return ` WHERE ${Object.keys(dataJson.where.conditional)[0]}='${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}'`;
-        }else if(dataJson.where.type=="like"){
-          return ` WHERE ${Object.keys(dataJson.where.conditional)[0]} LIKE '%${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}%'`;
-        }else if(dataJson.where.type=="ilike"){
-          return ` WHERE ${Object.keys(dataJson.where.conditional)[0]} ILIKE '%${dataJson.where.conditional[Object.keys(dataJson.where.conditional)[0]]}%'`;
         }
+        return " WHERE "+response;
+      }
+      if(dataJson.where.conditional && isNoEmptyJSON(dataJson.where.conditional)){
+        return " WHERE " + toAssenbleModule.makeWhereConditional(dataJson.where);
       }
     }
     return ``;
+  },
+  makeWhereConditional(conditional){
+    const { sanitationStringSql } = require("../utils/functions");
+    if(conditional.type){
+      if(conditional.type=="iqual"){
+        if(conditional.conditional[Object.keys(conditional.conditional)[0]] == "CURRENT_DATE"){
+          return `${sanitationStringSql(Object.keys(conditional.conditional)[0])}=CURRENT_DATE`;
+        }
+        return `${Object.keys(conditional.conditional)[0]}='${conditional.conditional[Object.keys(conditional.conditional)[0]]}'`;
+      }else if(conditional.type=="like"){
+        return `${Object.keys(conditional.conditional)[0]} LIKE '%${conditional.conditional[Object.keys(conditional.conditional)[0]]}%'`;
+      }else if(conditional.type=="ilike"){
+        return `${Object.keys(conditional.conditional)[0]} ILIKE '%${conditional.conditional[Object.keys(conditional.conditional)[0]]}%'`;
+      }
+    }
   }
 };
 module.exports = toAssenbleModule;
