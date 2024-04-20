@@ -95,6 +95,13 @@ const toAssenbleModule = {
     }
     return ``;
   },
+  makeSqlStringSelectOrder(dataJson) {
+    const { isNoEmptyJSON,sanitationStringSql } = require("../utils/functions");
+    if (dataJson?.order && isNoEmptyJSON(dataJson.order)) {
+      return ` ORDER BY ${sanitationStringSql(Object.keys(dataJson.order)[0])} ${sanitationStringSql(dataJson.order[Object.keys(dataJson.order)[0]])}`
+    }
+    return ``;
+  },
   makeWhereConditional(conditional){
     const { sanitationStringSql } = require("../utils/functions");
     if(conditional.type){
