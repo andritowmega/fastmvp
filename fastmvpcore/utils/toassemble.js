@@ -99,11 +99,15 @@ const toAssenbleModule = {
         if(conditional.conditional[Object.keys(conditional.conditional)[0]] == "CURRENT_DATE"){
           return `${sanitationStringSql(Object.keys(conditional.conditional)[0])}=CURRENT_DATE`;
         }
-        return `${Object.keys(conditional.conditional)[0]}='${conditional.conditional[Object.keys(conditional.conditional)[0]]}'`;
+        return `${Object.keys(conditional.conditional)[0]}='${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
       }else if(conditional.type=="like"){
-        return `${Object.keys(conditional.conditional)[0]} LIKE '%${conditional.conditional[Object.keys(conditional.conditional)[0]]}%'`;
+        return `${Object.keys(conditional.conditional)[0]} LIKE '%${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}%'`;
       }else if(conditional.type=="ilike"){
-        return `${Object.keys(conditional.conditional)[0]} ILIKE '%${conditional.conditional[Object.keys(conditional.conditional)[0]]}%'`;
+        return `${Object.keys(conditional.conditional)[0]} ILIKE '%${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}%'`;
+      }else if("smallerthan"){
+        return `${Object.keys(conditional.conditional)[0]} < '${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
+      }else if("greater than"){
+        return `${Object.keys(conditional.conditional)[0]} > '${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
       }
     }
   }
