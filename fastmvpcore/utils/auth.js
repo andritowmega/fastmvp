@@ -60,7 +60,17 @@ const authModule = {
             data: null,
           });
         }
-       
+      }else if(req.params.table1 && req.params.table2){
+        for(let i=0;i<response.data.length;i++){
+          if(response.data[i].tablename==req.params.table1 && response.data[i].access) {
+            needCheck=true;
+            break;
+          }
+          if(response.data[i].tablename==req.params.table2 && response.data[i].access) {
+            needCheck=true;
+            break;
+          }
+        }
       }else{
         for(let i=0;i<response.data.length;i++){
           if(response.data[i].tablename==req.params.table && response.data[i].access) {
@@ -70,7 +80,6 @@ const authModule = {
         }
       }
       if(!needCheck) {
-        console.log("no necesita token")
         if(req.body.dtfmvp) delete req.body.dtfmvp;
         let tokenBrowser =
         req.body.dtfmvp ||
@@ -84,6 +93,7 @@ const authModule = {
           return null;
         });
         req.datatoken = responseToken;
+        console.log("req.data",req.datatoken);
         return next();
       }
       let tokenBrowser =

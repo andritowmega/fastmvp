@@ -57,10 +57,7 @@ class FastMvpController {
         console.error("FastMvp Controller: can't execute InnerJoin", e);
         return e;
       });
-      if (response?.status && response.status == "ok") {
-        return res.json(response).status(200);
-      }
-      return res.json(response).status(500);
+      return FastMvpController.toResponse(response,req,res);
     }
     return res
       .json({
