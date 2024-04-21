@@ -1,38 +1,16 @@
 const jwt = require("jsonwebtoken");
-const configtoken = require("../../config/token");
 const moment = require("moment");
 const keypass = 30; //cuantos digitos aumentar al token
 
-module.exports = {
-  newTokenUser: async function (data,expiration) {
+const authModule = {
+  newTokenUser: async function (data,expiration,project) {
+    const optionsConnetion = require("../../config/configDb.json");;
     if('password' in data){
       delete data.password;
     }
     data.exp = moment().add(expiration, "days").unix();
-    return jwt.sign(data, configtoken.TOKEN_SECRET_USER);
+    return jwt.sign(data, optionsConnetion[project].token_secret);
   },
-
-  newTokenAdmin: async function (admin) {
-    const payload = {
-      idAdmin: admin.idloginadmin,
-      emailprofile: admin.email,
-      fullname: admin.names,
-      exp: moment().add(180, "days").unix(),
-    };
-    return jwt.sign(payload, configtoken.TOKEN_SECRET_ADMIN);
-  },
-
-  newKeyUser: async function (user) {
-    const payload = {
-      idprofile: user.idprofile,
-      email: user.email,
-      fullname: user.names + " " + user.surnames
-    };
-    const tk = jwt.sign(payload, configtoken.VERIFYEMAIL_SECRET_USER);
-    const nanoid = customAlphabet("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ$abcdefghijklmnopqrstu", keypass);
-    return nanoid() + Buffer.from(tk).toString('base64');
-  },
-
   keyDecoded: async function (key) {
     key = key.substring(keypass, key.lenght);
     const text = Buffer.from(key, 'base64').toString('ascii')
@@ -49,8 +27,6 @@ module.exports = {
       }
     );
   },
-
-
   comparePassword: async function (password, passwordhash) {
     const bcrypt = require("bcryptjs");
     return new Promise(async (resolve, reject) => {
@@ -65,61 +41,103 @@ module.exports = {
     let needCheck = false;
     const { get } = require("../services/allfunctions.service");
     const response = await get(req.params.project,"accesstoken",{"filters":["tablename","access"]});
-    if(response?.code && response.code=="42P01"){
-      if(req.body.dtfmvp) delete req.body.dtfmvp;
-      return next();
-    }
     if(response?.status && response.status=="ok" && response.data && Array.isArray(response.data)){
-      for(let i=0;i<response.data.length;i++){
-        if(response.data[i].tablename==req.params.table && response.data[i].access) {
-          needCheck=true;
-          break;
+      if(req.body.orderedList){
+        if(Array.isArray(req.body.orderedList) && req.body.orderedList.length>0){
+          for(let i=0;i<response.data.length;i++){
+            for(let x=0;x<req.body.orderedList.length;x++){
+              if(response.data[i].tablename==req.body.orderedList[x].in && response.data[i].access) {
+                needCheck=true;
+                break;
+              }
+            }
+            if(needCheck) break;
+          }
+        }else{
+          return res.status(400).json({
+            status: "error",
+            msg: "orderedList is not an array",
+            data: null,
+          });
+        }
+       
+      }else{
+        for(let i=0;i<response.data.length;i++){
+          if(response.data[i].tablename==req.params.table && response.data[i].access) {
+            needCheck=true;
+            break;
+          }
         }
       }
-    }
-    if(!needCheck) {
-      if(req.body.dtfmvp) delete req.body.dtfmvp;
-      return next();
-    }
-    let tokenBrowser =
-      req.body.dtfmvp ||
-      req.query.dtfmvp ||
-      req.headers["authorization"] ||
-      req.cookies.dtfmvp;
-
-    if (!tokenBrowser) {
+      if(!needCheck) {
+        console.log("no necesita token")
+        if(req.body.dtfmvp) delete req.body.dtfmvp;
+        let tokenBrowser =
+        req.body.dtfmvp ||
+        req.query.dtfmvp ||
+        req.headers["authorization"] ||
+        req.cookies.dtfmvp;
+        const bearerHeader = req.headers["authorization"];
+        if (typeof bearerHeader !== "undefined")
+          tokenBrowser = bearerHeader.split(" ")[1];
+        let responseToken = await authModule.checktoken(tokenBrowser,req.params.project).catch(e=>{
+          return null;
+        });
+        req.datatoken = responseToken;
+        return next();
+      }
+      let tokenBrowser =
+        req.body.dtfmvp ||
+        req.query.dtfmvp ||
+        req.headers["authorization"] ||
+        req.cookies.dtfmvp;
+      const bearerHeader = req.headers["authorization"];
+      if (typeof bearerHeader !== "undefined")
+        tokenBrowser = bearerHeader.split(" ")[1];
+      if(typeof tokenBrowser == "undefined" || tokenBrowser==""){
+        return res.status(403).json({
+          status: "error",
+          msg: "Token not received",
+          data: null,
+        });
+      }
+      let responseToken = await authModule.checktoken(tokenBrowser,req.params.project).catch(e=>{
+        return null;
+      });
+      if(typeof bearerHeader !== "undefined" || responseToken){
+        req.datatoken = responseToken;
+        if(req.body.dtfmvp) delete req.body.dtfmvp;
+        return next();
+      }
       req.datatoken = null;
       return res.status(403).json({
         status: "error",
-        msg: "Do not provide your token",
+        msg: "Invalid token",
         data: null,
       });
     }
-
-    const configToken = require("../../config/token");
-    const bearerHeader = req.headers["authorization"];
-
-    if (typeof bearerHeader !== "undefined")
-      tokenBrowser = bearerHeader.split(" ")[1];
-
-    jwt.verify(
-      tokenBrowser,
-      configToken.TOKEN_SECRET_USER,
-      async (err, decoded) => {
-        if (err) {
-          console.log("Error for validating user token", err.name);
-          req.datatoken = null;
-          return res.status(403).json({
-            status: "error",
-            msg: "Invlid token",
-            data: null,
-          });
-        } else {
-          req.datatoken = decoded;
-          if(req.body.dtfmvp) delete req.body.dtfmvp;
-          return next();
-        }
-      }
-    );
+    return res.status(500).json({
+      status: "error",
+      msg: "error accessing to accesstoken",
+      data: null,
+    });
+    
   },
+  checktoken: async function (tokenBrowser,project) {
+    return new Promise((resolve, reject) => {
+      if (!tokenBrowser) {
+        resolve(null);
+      }
+      const jwt = require("jsonwebtoken");
+      const optionsConnetion = require("../../config/configDb.json");
+      jwt.verify(tokenBrowser, optionsConnetion[project].token_secret, (err, decoded) => {
+        if (err) {
+          resolve(null);
+        } else {
+          resolve(decoded);
+        }
+      });
+    });
+  }
 };
+module.exports = authModule;

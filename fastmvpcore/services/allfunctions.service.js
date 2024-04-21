@@ -291,7 +291,7 @@ const servicesModule = {
         return null;
       })
       if(checkPassword){
-        const dataToken = await newTokenUser(get.data[0],body.lifetimedays);
+        const dataToken = await newTokenUser(get.data[0],body.lifetimedays,project);
         return {
           status: "ok",
           msg: "Bienvenido de nuevo",

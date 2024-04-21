@@ -160,6 +160,23 @@ const functionsModule = {
   },
   isNoEmptyJSON(obj) {
     return typeof obj === 'object' && obj !== null && JSON.stringify(obj) !== '{}';
-  }  
+  },
+  generateResponse(response,req,res){
+    if (response?.status && response.status == "ok") {
+      response.authentication = req.datatoken;
+      return res.json(response).status(200);
+    } else if (
+      response?.status &&
+      response.code &&
+      response.status == "error"
+    ) {
+      if (response.code == "42P01") {
+        return res.json(response).status(404);
+      } else if (response.code == "23505") {
+        return res.json(response).status(400);
+      }
+    }
+    return res.json(response).status(500);
+  }
 };
 module.exports = functionsModule;

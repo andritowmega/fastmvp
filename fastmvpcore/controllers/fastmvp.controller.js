@@ -1,24 +1,12 @@
 class FastMvpController {
+  static toResponse = require("../utils/functions").generateResponse;
   static async Create(req, res) {
     const {create} = require("../services/allfunctions.service");
     const response = await create(req.params.project, req.params.table, req.body).catch((e) => {
       console.error("FastMvp Controller: can't create", e);
       return e;
     });
-    if (response?.status && response.status == "ok") {
-      return res.json(response).status(200);
-    } else if (
-      response?.status &&
-      response.code &&
-      response.status == "error"
-    ) {
-      if (response.code == "42P01") {
-        return res.json(response).status(404);
-      } else if (response.code == "23505") {
-        return res.json(response).status(400);
-      }
-    }
-    return res.json(response).status(500);
+    return FastMvpController.toResponse(response,req,res);
   }
   static async Get(req, res) {
     const { get } = require("../services/allfunctions.service");
@@ -26,20 +14,7 @@ class FastMvpController {
       console.error("FastMvp Controller: can't get", e);
       return e;
     });
-    if (response?.status && response.status == "ok") {
-      return res.json(response).status(200);
-    } else if (
-      response?.status &&
-      response.code &&
-      response.status == "error"
-    ) {
-      if (response.code == "42P01") {
-        return res.json(response).status(404);
-      } else if (response.code == "23505") {
-        return res.json(response).status(400);
-      }
-    }
-    return res.json(response).status(500);
+    return FastMvpController.toResponse(response,req,res);
   }
   static async Update(req, res) {
     const { update } = require("../services/allfunctions.service");
@@ -55,10 +30,7 @@ class FastMvpController {
         return e;
       }
     );
-    if (response?.status && response.status == "ok") {
-      return res.json(response).status(200);
-    }
-    return res.json(response).status(500);
+    return FastMvpController.toResponse(response,req,res);
   }
   static async Delete(req, res) {
     const { deletePg } = require("../services/allfunctions.service");
@@ -72,10 +44,7 @@ class FastMvpController {
       console.error("FastMvp Controller: can't delete", e);
       return e;
     });
-    if (response?.status && response.status == "ok") {
-      return res.json(response).status(200);
-    }
-    return res.json(response).status(500);
+    return FastMvpController.toResponse(response,req,res);
   }
   static async InnerJoin(req, res) {
     const { innerJoin } = require("../services/allfunctions.service");
@@ -112,10 +81,7 @@ class FastMvpController {
         console.error("FastMvp Controller: can't execute InnerJoin", e);
         return e;
       });
-      if (response?.status && response.status == "ok") {
-        return res.json(response).status(200);
-      }
-      return res.json(response).status(500);
+      return FastMvpController.toResponse(response,req,res);
     }
     return res
       .json({
@@ -136,10 +102,7 @@ class FastMvpController {
         console.error("FastMvp Controller: can't execute InnerJoin", e);
         return e;
       });
-      if (response?.status && response.status == "ok") {
-        return res.json(response).status(200);
-      }
-      return res.json(response).status(500);
+      return FastMvpController.toResponse(response,req,res);
     }
     return res
       .json({
@@ -155,10 +118,7 @@ class FastMvpController {
         console.error("FastMvp Controller: can't execute OrderedList", e);
         return e;
       });
-      if (response?.status && response.status == "ok") {
-        return res.json(response).status(200);
-      }
-      return res.json(response).status(500);
+      return FastMvpController.toResponse(response,req,res);
   }
   static async CheckToken(req,res){
     const { loginToken } = require("../services/allfunctions.service");
@@ -166,10 +126,7 @@ class FastMvpController {
       console.error("FastMvp Controller: can't execute LoginToken", e);
       return e;
     });
-    if (response?.status && response.status == "ok") {
-      return res.json(response).status(200);
-    }
-    return res.json(response).status(500);
+    return FastMvpController.toResponse(response,req,res);
   }
 }
 module.exports = FastMvpController;
