@@ -21,6 +21,10 @@ const toAssenbleModule = {
   },
   makeSqlStringUpdate(dataJson, condition) {
     if (Object.keys(dataJson)?.length && Object.keys(dataJson)?.length > 0) {
+      if('password' in dataJson){
+        const bcrypt = require("bcryptjs");
+        dataJson.password = bcrypt.hashSync(dataJson.password,8);
+      }
       let namesString = Object.keys(dataJson);
       let response = namesString
         .map((name, index) => {
@@ -37,7 +41,7 @@ const toAssenbleModule = {
         })
         .join(", ");
       response += condition
-        ? ` WHERE ${condition.key} = ${condition.value}`
+        ? ` WHERE ${condition.key} = '${condition.value}'`
         : ``;
       response += " RETURNING *";
       return response;
@@ -45,7 +49,7 @@ const toAssenbleModule = {
     return null;
  },
   makeSqlStringDelete(condition) {
-    let response = ` WHERE ${condition.key} = ${condition.value}`;
+    let response = ` WHERE ${condition.key} = '${condition.value}'`;
     response += " RETURNING *";
     return response;
   },

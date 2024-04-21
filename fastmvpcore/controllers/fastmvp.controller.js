@@ -140,5 +140,43 @@ class FastMvpController {
     });
     return FastMvpController.toResponse(response,req,res);
   }
+  static async UpdatePassword(req,res){
+    const {update,loginToken} = require("../services/allfunctions.service");
+    
+    let content = {}
+    content.where = {}
+    content.where.conditional = {}
+    if(req.body.where)
+    if(req.body.where?.conditional?.key){
+      content.where.conditional[req.body.where.conditional.key] = req.datatoken[req.body.where.conditional.key] 
+    }
+    console.log("password", req.body.password)
+    content.password = req.body.password;
+    content.lifetimedays="1";
+
+    const response = await loginToken(req.params.project,req.params.table,content).catch((e) => {
+      console.error("FastMvp Controller: can't execute LoginToken", e);
+      return e;
+    });
+    if(response?.status && response.status=="ok"){
+      let condition = req.body.where.conditional.key
+      ? {
+          key: req.body.where.conditional.key,
+          value: req.datatoken[req.body.where.conditional.key] ,
+        }
+      : null;
+      let nbody = {};
+      nbody.password = req.body.newpassword;
+      const responseUpdate = await update(req.params.project, req.params.table, nbody , condition).catch(
+        (e) => {
+          console.error("FastMvp Controller: can't update", e);
+          return e;
+        }
+      );
+      return FastMvpController.toResponse(responseUpdate,req,res);
+    }
+    return FastMvpController.toResponse(response,req,res);
+    
+  }
 }
 module.exports = FastMvpController;
