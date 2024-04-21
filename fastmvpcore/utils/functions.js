@@ -163,6 +163,7 @@ const functionsModule = {
   },
   generateResponse(response,req,res){
     if (response?.status && response.status == "ok") {
+      functionsModule.deleteKey(response.data,"password");
       response.authentication = req.datatoken;
       return res.json(response).status(200);
     } else if (
@@ -177,6 +178,16 @@ const functionsModule = {
       }
     }
     return res.json(response).status(500);
-  }
+  },
+  deleteKey(object,keySearch) {
+    for (let key in object) {
+        if (key === keySearch) {
+          delete object[key];
+        }
+        if (typeof object[key] === "object") {
+          functionsModule.deleteKey(object[key],keySearch); 
+        }
+    }
+}
 };
 module.exports = functionsModule;

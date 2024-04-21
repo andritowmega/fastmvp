@@ -26,6 +26,9 @@ module.exports = {
       )} FROM ${table1} INNER JOIN ${table2} ON ${table1}.${sanitationStringSql(
         Object.keys(dataJson.keys)[0]
       )} = ${table2}.${sanitationStringSql(Object.values(dataJson.keys)[0])}`;
+      if(dataJson.where){
+        queryString += ` WHERE ${table1}.${sanitationStringSql(dataJson.where.conditional.key)} = '${sanitationStringSql(dataJson.where.conditional.value)}'`;
+      }
       console.log("queryString", queryString);
       const data = await connection.query(queryString).catch((err) => {
         console.error(

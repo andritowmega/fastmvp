@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
 
 /* POST api listing. */
 router.post("/:project/orderedlist",auth.authenticateUser, FastMvpController.OrderedList);
+router.post("/:project/auth/:table1/:table2/token/info",auth.authenticateUser, FastMvpController.GetInfo);
 router.post("/:project/auth/:table/token/check",auth.authenticateUser, FastMvpController.CheckToken);
 router.post("/:project/:table/get",auth.authenticateUser, FastMvpController.Get);
 router.post("/:project/:table/create",auth.authenticateUser, FastMvpController.Create);

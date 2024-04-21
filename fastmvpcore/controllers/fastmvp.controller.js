@@ -125,5 +125,20 @@ class FastMvpController {
     });
     return FastMvpController.toResponse(response,req,res);
   }
+  static async GetInfo(req,res){
+    const { innerJoin } = require("../services/allfunctions.service");
+    const tables = {
+      table1: req.params.table1,
+      table2: req.params.table2,
+    };
+    if(req.body.where?.conditional?.key){
+      req.body.where.conditional.value = req.datatoken[req.body.where.conditional.key];
+    }
+    const response = await innerJoin(req.params.project,tables,req.body).catch((e) => {
+      console.error("FastMvp Controller: can't execute InnerJoin", e);
+      return e;
+    });
+    return FastMvpController.toResponse(response,req,res);
+  }
 }
 module.exports = FastMvpController;
