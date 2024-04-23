@@ -14,7 +14,7 @@ router.post("/:project/auth/:table/password",auth.authenticateUser,auth.replaceW
 router.post("/:project/auth/:table1/:table2/token/info",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.GetInfo);
 router.post("/:project/auth/:table/token/check", FastMvpController.CheckToken);
 router.post("/:project/:table/get",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Get);
-router.post("/:project/:table/create",auth.authenticateUser, FastMvpController.Create);
+router.post("/:project/:table/create",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Create);
 router.post("/:project/:table1/innerj/:table2",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoin);
 router.post("/:project/:table1/innerj/:table2/right",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoinRight);
 router.post("/:project/:table1/innerj/:table2/left",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoinLeft);

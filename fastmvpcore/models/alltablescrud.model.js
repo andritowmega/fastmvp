@@ -9,6 +9,7 @@ module.exports = {
         `INSERT INTO  ${sanitationStringSql(table)} ` +
         makeSqlStringInsert(dataJson);
       console.log("queryString", queryString);
+      console.log("values",Object.values(dataJson))
       const data = await connection
         .query(queryString, Object.values(dataJson))
         .catch((err) => {

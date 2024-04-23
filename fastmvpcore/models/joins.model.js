@@ -17,7 +17,7 @@ module.exports = {
         });
       }
       const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
-      const { makeSqlStringSelect } = require("../utils/toassemble");
+      const { makeSqlStringSelect,makeSqlStringSelectWhere,makeSqlStringSelectOrder } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       const table1 = sanitationStringSql(tables.table1);
       const table2 = sanitationStringSql(tables.table2);
@@ -27,7 +27,7 @@ module.exports = {
         Object.keys(dataJson.keys)[0]
       )} = ${table2}.${sanitationStringSql(Object.values(dataJson.keys)[0])}`;
       if(dataJson.where){
-        queryString += ` WHERE ${table1}.${sanitationStringSql(dataJson.where.conditional.key)} = '${sanitationStringSql(dataJson.where.conditional.value)}'`;
+        queryString += `${makeSqlStringSelectWhere(dataJson)} ${makeSqlStringSelectOrder(dataJson)}`;
       }
       console.log("queryString", queryString);
       const data = await connection.query(queryString).catch((err) => {
