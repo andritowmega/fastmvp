@@ -188,6 +188,24 @@ const functionsModule = {
           functionsModule.deleteKey(object[key],keySearch); 
         }
     }
-}
+  },
+  replaceKeyValue(jsonObj, searchValue , newJsonObj) {
+    // Recorrer todas las claves del objeto JSON
+    for (let key in jsonObj) {
+      // Verificar si el valor de la clave comienza con "AUTH::id_profile"
+      if(Array.isArray(jsonObj[key])){
+        functionsModule.replaceKeyValue(jsonObj[key], searchValue , newJsonObj);
+      }
+      if (typeof jsonObj[key] === 'string' && jsonObj[key].startsWith(searchValue)) {
+        // Reemplazar el valor con el nuevo valor
+        const getKey = jsonObj[key].replace(/^AUTH::/, '');
+        jsonObj[key] = newJsonObj[getKey];
+      }
+      // Si el valor es otro objeto JSON, llamar recursivamente a la función para reemplazar dentro de ese objeto
+      if (typeof jsonObj[key] === 'object') {
+        functionsModule.replaceKeyValue(jsonObj[key], searchValue , newJsonObj);
+      }
+    }
+  }
 };
 module.exports = functionsModule;

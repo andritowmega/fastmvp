@@ -133,6 +133,13 @@ const authModule = {
     });
     
   },
+  replaceWithUserData:function (req,res,next){
+    const {isNoEmptyJSON,replaceKeyValue} = require("../utils/functions");
+    if(req.datatoken && isNoEmptyJSON(req.datatoken)){
+      replaceKeyValue(req.body,"AUTH::",req.datatoken);
+    }
+    return next();
+  },
   checktoken: async function (tokenBrowser,project) {
     return new Promise((resolve, reject) => {
       if (!tokenBrowser) {

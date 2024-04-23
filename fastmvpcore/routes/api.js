@@ -9,16 +9,16 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST api listing. */
-router.post("/:project/orderedlist",auth.authenticateUser, FastMvpController.OrderedList);
-router.post("/:project/auth/:table/password",auth.authenticateUser, FastMvpController.UpdatePassword);
-router.post("/:project/auth/:table1/:table2/token/info",auth.authenticateUser, FastMvpController.GetInfo);
+router.post("/:project/orderedlist",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.OrderedList);
+router.post("/:project/auth/:table/password",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.UpdatePassword);
+router.post("/:project/auth/:table1/:table2/token/info",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.GetInfo);
 router.post("/:project/auth/:table/token/check", FastMvpController.CheckToken);
-router.post("/:project/:table/get",auth.authenticateUser, FastMvpController.Get);
+router.post("/:project/:table/get",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Get);
 router.post("/:project/:table/create",auth.authenticateUser, FastMvpController.Create);
-router.post("/:project/:table1/innerj/:table2",auth.authenticateUser, FastMvpController.InnerJoin);
-router.post("/:project/:table1/innerj/:table2/right",auth.authenticateUser, FastMvpController.InnerJoinRight);
-router.post("/:project/:table1/innerj/:table2/left",auth.authenticateUser, FastMvpController.InnerJoinLeft);
-router.post("/:project/:table/update/:key/:value",auth.authenticateUser, FastMvpController.Update);
-router.post("/:project/:table/delete/:key/:value",auth.authenticateUser, FastMvpController.Delete);
+router.post("/:project/:table1/innerj/:table2",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoin);
+router.post("/:project/:table1/innerj/:table2/right",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoinRight);
+router.post("/:project/:table1/innerj/:table2/left",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoinLeft);
+router.post("/:project/:table/update/:key/:value",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Update);
+router.post("/:project/:table/delete/:key/:value",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Delete);
 
 module.exports = router;
