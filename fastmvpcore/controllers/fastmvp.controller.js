@@ -132,7 +132,12 @@ class FastMvpController {
       table2: req.params.table2,
     };
     if(req.body.where?.conditional?.key){
-      req.body.where.conditional.value = req.datatoken[req.body.where.conditional.key];
+      let tempWhere = JSON.parse(JSON.stringify(req.body.where));
+      delete req.body.where
+      req.body.where = {};
+      req.body.where.type="iqual";
+      req.body.where.conditional = {};
+      req.body.where.conditional[tempWhere.conditional.key] = req.datatoken[tempWhere.conditional.key];
     }
     const response = await innerJoin(req.params.project,tables,req.body).catch((e) => {
       console.error("FastMvp Controller: can't execute InnerJoin", e);
