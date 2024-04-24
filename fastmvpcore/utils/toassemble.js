@@ -113,18 +113,39 @@ const toAssenbleModule = {
         if(conditional.conditional[Object.keys(conditional.conditional)[0]] == "CURRENT_DATE"){
           return `${sanitationStringSql(Object.keys(conditional.conditional)[0])}=CURRENT_DATE`;
         }
+        else if(conditional.conditional[Object.keys(conditional.conditional)[0]] == "CURRENT_TIMESTAMP"){
+          return `${sanitationStringSql(Object.keys(conditional.conditional)[0])}=CURRENT_TIMESTAMP`;
+        }
+        if(conditional.conditional[Object.keys(conditional.conditional)[0]].includes("ROW::")){
+          return `${Object.keys(conditional.conditional)[0]} = ${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]].replace("ROW::",""))}`;
+        }
         return `${Object.keys(conditional.conditional)[0]}='${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
       }else if(conditional.type=="like"){
         return `${Object.keys(conditional.conditional)[0]} LIKE '%${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}%'`;
       }else if(conditional.type=="ilike"){
         return `${Object.keys(conditional.conditional)[0]} ILIKE '%${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}%'`;
       }else if(conditional.type=="smallerthan"){
+        if(conditional.conditional[Object.keys(conditional.conditional)[0]] == "CURRENT_DATE"){
+          return `${sanitationStringSql(Object.keys(conditional.conditional)[0])}=CURRENT_DATE`;
+        }
+        else if(conditional.conditional[Object.keys(conditional.conditional)[0]] == "CURRENT_TIMESTAMP"){
+          if(conditional.interval){
+            return `${sanitationStringSql(Object.keys(conditional.conditional)[0])}<CURRENT_TIMESTAMP ${sanitationStringSql(conditional.interval.type)} INTERVAL '${sanitationStringSql(conditional.interval.value)}'`;
+          }
+          return `${sanitationStringSql(Object.keys(conditional.conditional)[0])}<CURRENT_TIMESTAMP`;
+        }
         return `${Object.keys(conditional.conditional)[0]} < '${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
       }else if(conditional.type=="greaterthan"){
         return `${Object.keys(conditional.conditional)[0]} > '${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
       }else if(conditional.type=="between" && conditional.range){
         return `${sanitationStringSql(conditional.row)} BETWEEN '${sanitationStringSql(conditional.range.first)}' AND '${sanitationStringSql(conditional.range.second)}'`;
+      }else if(conditional.type=="different"){
+        if(conditional.conditional[Object.keys(conditional.conditional)[0]].includes("ROW::")){
+          return `${Object.keys(conditional.conditional)[0]} <> ${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]].replace("ROW::",""))}`;
+        }
+        return `${Object.keys(conditional.conditional)[0]}<>'${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
       }
+        
     }
   }
 };
