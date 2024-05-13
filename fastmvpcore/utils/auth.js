@@ -8,8 +8,7 @@ const authModule = {
     if('password' in data){
       delete data.password;
     }
-    data.exp = moment().add(expiration, "days").unix();
-    return jwt.sign(data, optionsConnetion[project].token_secret);
+    return jwt.sign(data, optionsConnetion[project].token_secret,{ expiresIn: expiration+'d' });
   },
   keyDecoded: async function (key) {
     key = key.substring(keypass, key.lenght);
@@ -149,6 +148,7 @@ const authModule = {
       const optionsConnetion = require("../../config/configDb.json");
       jwt.verify(tokenBrowser, optionsConnetion[project].token_secret, (err, decoded) => {
         if (err) {
+          console.log("err",err)
           resolve(null);
         } else {
           resolve(decoded);
