@@ -27,8 +27,9 @@ module.exports = {
         Object.keys(dataJson.keys)[0]
       )} = ${table2}.${sanitationStringSql(Object.values(dataJson.keys)[0])}`;
       if(dataJson.where){
-        queryString += `${makeSqlStringSelectWhere(dataJson)} ${makeSqlStringSelectOrder(dataJson)}`;
+        queryString += `${makeSqlStringSelectWhere(dataJson)}`;
       }
+      queryString += makeSqlStringSelectOrder(dataJson);
       console.log("queryString", queryString);
       const data = await connection.query(queryString).catch((err) => {
         console.error(

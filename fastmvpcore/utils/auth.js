@@ -92,7 +92,7 @@ const authModule = {
           return null;
         });
         req.datatoken = responseToken;
-        console.log("req.data",req.datatoken);
+        //console.log("req.data",req.datatoken);
         return next();
       }
       let tokenBrowser =
