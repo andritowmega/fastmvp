@@ -32,6 +32,48 @@ class FastMvpController {
     );
     return FastMvpController.toResponse(response,req,res);
   }
+  static async RepetitiveTaskUpdate(req, res) {
+    const { update } = require("../services/allfunctions.service");
+    let fullResponse = null;
+    if(req.body && req.body.tasks){
+      const tasks = req.body.tasks;
+      let responses = new Array();
+      for(let i = 0;i<tasks.length;i++){
+        const singleTask = tasks[i];
+        const condition = {
+          key: singleTask.key,
+          value: singleTask.value
+        }
+        const response = await update(req.params.project, req.params.table, singleTask.body, condition).catch(
+          (e) => {
+            console.error("FastMvp Controller: can't update", e);
+            return e;
+          }
+        );
+        responses.push(response);
+      }
+      if(responses.length>0){
+        fullResponse = {
+          status:"ok",
+          msg:"Tareas Repetitivas",
+          data:responses
+        }
+      }else{
+        fullResponse = {
+          status:"ok",
+          msg:"No se obtuvo resultados",
+          data:responses
+        }
+      }
+      return FastMvpController.toResponse(fullResponse,req,res);
+    }
+    fullResponse = {
+      status:"error",
+      msg:"Estructura Json errónea para esta solicitud",
+      data:null
+    }
+    return FastMvpController.toResponse(fullResponse,req,res);
+  }
   static async Delete(req, res) {
     const { deletePg } = require("../services/allfunctions.service");
     let condition = req.params.key
