@@ -19,6 +19,7 @@ router.post("/:project/:table1/innerj/:table2",auth.authenticateUser,auth.replac
 router.post("/:project/:table1/innerj/:table2/right",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoinRight);
 router.post("/:project/:table1/innerj/:table2/left",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.InnerJoinLeft);
 router.post("/:project/:table/update/:key/:value",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Update);
+router.post("/:project/:table/repetitivetask/update",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.RepetitiveTaskUpdate);
 router.post("/:project/:table/delete/:key/:value",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Delete);
 
 module.exports = router;
