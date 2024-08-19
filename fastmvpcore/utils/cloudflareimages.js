@@ -4,7 +4,17 @@ const { customAlphabet } = require('nanoid');
 const fs = require("fs");
 
 module.exports = {
-  async upload({ file }) {
+  async upload({ file },project) {
+    let configDev = require("../../config/configDb.json");
+    if(configDev.hasOwnProperty(project)){
+      if(configDev[project].hasOwnProperty("cloudflareimages")){
+
+      }else{
+        console.error("Module: CloudFlareImages - No hay credenciales en json");
+      }
+    }else{
+      console.error("Module: CloudFlareImages - No hay proyecto con ese nombre");
+    }
     const fetch = require("node-fetch");
     const domain = require("../config/config.js")
     const nanoid = customAlphabet("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
