@@ -7,16 +7,24 @@ module.exports = {
   async upload({ file },project) {
     let configDev = require("../../config/configDb.json");
     if(configDev.hasOwnProperty(project)){
-      if(configDev[project].hasOwnProperty("cloudflareimages")){
-
-      }else{
-        console.error("Module: CloudFlareImages - No hay credenciales en json");
+      if(!configDev[project].hasOwnProperty("cloudflareimages")){
+        console.error("Module: CloudFlareImages - no data for cloudflareimages");
+        return {
+          status:"error",
+          data:null,
+          msg:"No data for cloudflareimages"
+        };
       }
     }else{
-      console.error("Module: CloudFlareImages - No hay proyecto con ese nombre");
+      console.error("Module: CloudFlareImages - This project does not exist");
+      return {
+        status:"error",
+        data:null,
+        msg:"This project does not exist"
+      };
     }
     const fetch = require("node-fetch");
-    const domain = require("../config/config.js")
+    const domain = configDev[project].cloudflareimages.domain;
     const nanoid = customAlphabet("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
     const body = new FormData();
     let result = null;
