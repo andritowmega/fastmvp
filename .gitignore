@@ -4,3 +4,4 @@ config/configDb.json
 config/token.js
 config/cloudflareImg.js
 ecosystem.config.js
+public/tmp

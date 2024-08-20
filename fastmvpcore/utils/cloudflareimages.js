@@ -31,7 +31,7 @@ module.exports = {
 
     let documentname = nanoid();
     let filename = documentname + "." + file.mimetype.split("/")[1];
-    let url = require("path").join(__dirname, "../public/tmp/" + filename);
+    let url = require("path").join(__dirname, "../../public/tmp/" + filename);
 
     try {
       file.mv(url, (err) => {
