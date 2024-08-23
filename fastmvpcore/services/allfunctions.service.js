@@ -318,6 +318,21 @@ const servicesModule = {
       };
     }
   },
+  async uploadImageCF(project,files){
+    const imageUtils = require("../utils/cloudflareimages");
+    console.log("in",files)
+    if(files && files.file){
+      let imageID = null;
+      const image = await imageUtils.upload(files,project).catch(e=>{
+        console.error("UPLOAD SERVICE - can not upload image to cloudflare", err);
+        return e;
+      })
+      console.log("Se subio",image);
+      return image;
+      if (image && image.id) imageID = image.id;
+      else console.error("No se subió la imágen");
+    }
+  }
 };
 
 module.exports = servicesModule;

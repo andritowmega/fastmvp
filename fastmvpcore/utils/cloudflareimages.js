@@ -1,11 +1,9 @@
 const FormData = require("form-data");
-const CF = require("../config/cloudflareImg");
-const { customAlphabet } = require('nanoid');
 const fs = require("fs");
+let configDev = require("../../config/configDb.json");
 
 module.exports = {
   async upload({ file },project) {
-    let configDev = require("../../config/configDb.json");
     if(configDev.hasOwnProperty(project)){
       if(!configDev[project].hasOwnProperty("cloudflareimages")){
         console.error("Module: CloudFlareImages - no data for cloudflareimages");
@@ -23,16 +21,25 @@ module.exports = {
         msg:"This project does not exist"
       };
     }
-    const fetch = require("node-fetch");
-    const domain = configDev[project].cloudflareimages.domain;
-    const nanoid = customAlphabet("1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ", 10);
+    console.log("start",configDev[project].cloudflareimages)
+    try{
+      const fetch = require("node-fetch");
+    }
+    catch (e){
+      console.error("catch",e);
+    }
+    console.log("start2")
+    const CF = configDev[project].cloudflareimages;
+    
+    const domain = CF.domain;
     const body = new FormData();
     let result = null;
 
-    let documentname = nanoid();
+    let documentname = "variable";
     let filename = documentname + "." + file.mimetype.split("/")[1];
     let url = require("path").join(__dirname, "../../public/tmp/" + filename);
-
+    console.log("url",url)
+    
     try {
       file.mv(url, (err) => {
         if (err) {
@@ -45,16 +52,16 @@ module.exports = {
     } catch (err) {
       console.error("Something wrong happened removing the file", err);
     }
-
     body.append("url", domain.URI + "/tmp/" + filename);
+    console.log("poush",domain.URI + "/tmp/" + filename);
 
     try {
       const res = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/${CF.CF_IMAGES_ACCOUNT_ID}/images/v1`,
+        `https://api.cloudflare.com/client/v4/accounts/${CF.accountId}/images/v1`,
         {
           method: "POST",
           headers: {
-            'Authorization': `Bearer ${CF.CF_IMAGES_API_KEY}`
+            'Authorization': `Bearer ${CF.apiKey}`
           },
           body,
         }
@@ -79,7 +86,7 @@ module.exports = {
     }
 
     try {
-      fs.unlinkSync(__dirname + "/../public/tmp/" + filename);
+      fs.unlinkSync(__dirname + "../../public/tmp/" + filename);
       console.log("File removed");
     } catch (err) {
       console.error("Something wrong happened removing the file", err);
@@ -87,16 +94,17 @@ module.exports = {
     return result;
   },
 
-  async delete(idimage) {
+  async delete(idimage,project) {
     const fetch = require("node-fetch");
+    const CF = configDev[project].cloudflareimages;
     console.log(`Deleting Cloudflare Image: ${idimage}`);
     let result = null;
     try {
       const res = await fetch(
-        `https://api.cloudflare.com/client/v4/accounts/${CF.CF_IMAGES_ACCOUNT_ID}/images/v1/${idimage}`,
+        `https://api.cloudflare.com/client/v4/accounts/${CF.accountId}/images/v1/${idimage}`,
         {
           method: "DELETE",
-          headers: { "Authorization": `Bearer ${CF.CF_IMAGES_API_KEY}` },
+          headers: { "Authorization": `Bearer ${CF.apiKey}` },
         }
       ).catch((err) => {
         console.error("Error en delete image", err);

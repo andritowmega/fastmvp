@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require("cors");
+const fileUpload = require("express-fileupload");
 
 var indexRouter = require('./routes/index');
 var fastMvpApiRouter = require('./fastmvpcore/routes/api');
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
+app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
 
 app.use('/', indexRouter);
 app.use('/fm/api', fastMvpApiRouter);
