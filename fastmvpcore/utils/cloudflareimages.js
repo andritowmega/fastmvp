@@ -22,12 +22,9 @@ module.exports = {
       };
     }
     console.log("start",configDev[project].cloudflareimages)
-    try{
-      const fetch = require("node-fetch");
-    }
-    catch (e){
-      console.error("catch",e);
-    }
+    const fetch = require("node-fetch");
+    console.error("catch",e);
+
     console.log("start2")
     const CF = configDev[project].cloudflareimages;
     
