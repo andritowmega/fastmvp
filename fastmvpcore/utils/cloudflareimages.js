@@ -99,16 +99,17 @@ module.exports = {
         }
       ).catch((err) => {
         console.error("Error en delete image", err);
+        throw new Error(`${idimage}: FETCH ERROR `,err.toString  );
       });
-      if (res.status === 200) {
+      if (res && res.status === 200) {
         const response = await res.json();
+        result = response;
         console.log("The image was successfully removed")
-        result = response.result;
+        return response.result;
       }
-      throw new Error(`${idimage}: HTTP ` + res.status + " : " + await res.text());
+      throw new Error(`${idimage}: Delete CloudFlareImages:  ${res.statusText}`);
     } catch (e) {
-      console.log(e.toString());
+      throw new Error(`${idimage}: Delete CloudFlareImages:  `,e.toString );
     }
-    return result;
   }
 }

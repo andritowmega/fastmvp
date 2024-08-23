@@ -234,5 +234,13 @@ class FastMvpController {
     console.log("response image",response);
     return FastMvpController.toResponse(response,req,res);
   }
+  static async DeleteImageCF(req,res){
+    const {deleteImageCF} = require("../services/allfunctions.service");
+    const response = await deleteImageCF(req.params.project,req.body).catch(e=>{
+      console.error("FastMvp Controller: can't delete image to cloudflareimages",e);
+      return e;
+    });
+    return FastMvpController.toResponse(response,req,res);
+  }
 }
 module.exports = FastMvpController;

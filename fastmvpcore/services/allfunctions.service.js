@@ -320,17 +320,44 @@ const servicesModule = {
   },
   async uploadImageCF(project,files){
     const imageUtils = require("../utils/cloudflareimages");
-    console.log("in",files)
     if(files && files.file){
-      let imageID = null;
       const image = await imageUtils.upload(files,project).catch(e=>{
         console.error("UPLOAD SERVICE - can not upload image to cloudflare", err);
         return e;
       })
-      console.log("Se subio",image);
-      return image;
-      if (image && image.id) imageID = image.id;
+      if (image && image.id) {
+        return {
+          status: "ok",
+          msg: "Imagen subida correctamente",
+          data: image
+        };
+      }
       else console.error("No se subió la imágen");
+    }
+  },
+  async deleteImageCF(project,data){
+    const imageUtils = require("../utils/cloudflareimages");
+    if(data && data.id){
+      const image = await imageUtils.delete(data.id,project).catch(e=>{
+        console.error("DELETE SERVICE - can not delete image to cloudflare", e);
+        return e;
+      })
+      console.log("image",image)
+      if (image && image==true) {
+        return {
+          status: "ok",
+          msg: "Imagen subida correctamente",
+          data: image
+        };
+      }
+      else {
+        return {
+          status: "error",
+          msg: "Error al subir la imagen",
+          data: image
+        };
+        
+      }
     }
   }
 };

@@ -10,6 +10,7 @@ router.get('/', function(req, res, next) {
 
 /* POST api CloudFlareImages */
 router.post("/:project/cloudflareimg/upload",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.UploadImageCF);
+router.post("/:project/cloudflareimg/delete",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.DeleteImageCF);
 
 /* POST api listing. */
 router.post("/:project/orderedlist",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.OrderedList);
