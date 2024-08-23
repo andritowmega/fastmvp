@@ -21,11 +21,7 @@ module.exports = {
         msg:"This project does not exist"
       };
     }
-    console.log("start",configDev[project].cloudflareimages)
     const fetch = require("node-fetch");
-    console.error("catch",e);
-
-    console.log("start2")
     const CF = configDev[project].cloudflareimages;
     
     const domain = CF.domain;
@@ -35,7 +31,7 @@ module.exports = {
     let documentname = "variable";
     let filename = documentname + "." + file.mimetype.split("/")[1];
     let url = require("path").join(__dirname, "../../public/tmp/" + filename);
-    console.log("url",url)
+
     
     try {
       file.mv(url, (err) => {
@@ -63,8 +59,6 @@ module.exports = {
           body,
         }
       );
-
-
       if (res && res.status) {
         if (res.status === 200) {
           const response = await res.json();
