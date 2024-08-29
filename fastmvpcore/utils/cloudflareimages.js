@@ -27,12 +27,11 @@ module.exports = {
     const domain = CF.domain;
     const body = new FormData();
     let result = null;
-
-    let documentname = "variable";
+    const {generateRandomString} = require("./functions");
+    let documentname = generateRandomString(20);
     let filename = documentname + "." + file.mimetype.split("/")[1];
     let url = require("path").join(__dirname, "../../public/tmp/" + filename);
 
-    
     try {
       file.mv(url, (err) => {
         if (err) {
@@ -46,7 +45,7 @@ module.exports = {
       console.error("Something wrong happened removing the file", err);
     }
     body.append("url", domain.URI + "/tmp/" + filename);
-    console.log("poush",domain.URI + "/tmp/" + filename);
+    //console.log("poush",domain.URI + "/tmp/" + filename);
 
     try {
       const res = await fetch(
@@ -77,7 +76,7 @@ module.exports = {
     }
 
     try {
-      fs.unlinkSync(__dirname + "../../public/tmp/" + filename);
+      fs.unlinkSync(__dirname + "/../../public/tmp/" + filename);
       console.log("File removed");
     } catch (err) {
       console.error("Something wrong happened removing the file", err);
@@ -88,7 +87,7 @@ module.exports = {
   async delete(idimage,project) {
     const fetch = require("node-fetch");
     const CF = configDev[project].cloudflareimages;
-    console.log(`Deleting Cloudflare Image: ${idimage}`);
+    //console.log(`Deleting Cloudflare Image: ${idimage}`);
     let result = null;
     try {
       const res = await fetch(

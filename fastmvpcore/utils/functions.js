@@ -13,8 +13,8 @@ const functionsModule = {
     }
     return null;
   },
-  errorControlWithSqlCode(errJson,table){
-    console.log("errorJson",errJson);
+  errorControlWithSqlCode(errJson, table) {
+    console.log("errorJson", errJson);
     if (errJson.error.code == "42P01") {
       return {
         conditional: true,
@@ -125,33 +125,33 @@ const functionsModule = {
           data: null,
         },
       };
-    } 
-      return {
-        conditional: false,
-        payload: errJson,
-      };
+    }
+    return {
+      conditional: false,
+      payload: errJson,
+    };
   },
-  useReplace(singleQuery,responseArray){
-      for(var fieldKey in singleQuery.body){
-        if(singleQuery.body.hasOwnProperty(fieldKey)){
-          var value = singleQuery.body[fieldKey];
-          if(typeof value === 'string' && value.includes('USE::')){
-            let valueToFind =  singleQuery.body[fieldKey].substring(5);
-            singleQuery.body[fieldKey]  = functionsModule.findKeyFromArrayResponse(responseArray,valueToFind);
-          }
+  useReplace(singleQuery, responseArray) {
+    for (var fieldKey in singleQuery.body) {
+      if (singleQuery.body.hasOwnProperty(fieldKey)) {
+        var value = singleQuery.body[fieldKey];
+        if (typeof value === 'string' && value.includes('USE::')) {
+          let valueToFind = singleQuery.body[fieldKey].substring(5);
+          singleQuery.body[fieldKey] = functionsModule.findKeyFromArrayResponse(responseArray, valueToFind);
         }
       }
+    }
     return singleQuery;
   },
-  findKeyFromArrayResponse(responseArray,valueToFind){
+  findKeyFromArrayResponse(responseArray, valueToFind) {
     let arrayToFind = new Array();
-    if(!valueToFind.includes('.')) return null;
+    if (!valueToFind.includes('.')) return null;
     arrayToFind = valueToFind.split('.');
-    if(arrayToFind.length<2) return null;
-    for(let i=0;i<responseArray.length;i++){
-      if(arrayToFind[0] in responseArray[i]){
-        if(responseArray[i][arrayToFind[0]].status=='error') return null;
-        if(arrayToFind[1] in responseArray[i][arrayToFind[0]].data) {
+    if (arrayToFind.length < 2) return null;
+    for (let i = 0; i < responseArray.length; i++) {
+      if (arrayToFind[0] in responseArray[i]) {
+        if (responseArray[i][arrayToFind[0]].status == 'error') return null;
+        if (arrayToFind[1] in responseArray[i][arrayToFind[0]].data) {
           return responseArray[i][arrayToFind[0]].data[arrayToFind[1]];
         }
       }
@@ -161,9 +161,9 @@ const functionsModule = {
   isNoEmptyJSON(obj) {
     return typeof obj === 'object' && obj !== null && JSON.stringify(obj) !== '{}';
   },
-  generateResponse(response,req,res){
+  generateResponse(response, req, res) {
     if (response?.status && response.status == "ok") {
-      functionsModule.deleteKey(response.data,"password");
+      functionsModule.deleteKey(response.data, "password");
       response.authentication = req.datatoken;
       return res.json(response).status(200);
     } else if (
@@ -179,22 +179,22 @@ const functionsModule = {
     }
     return res.json(response).status(500);
   },
-  deleteKey(object,keySearch) {
+  deleteKey(object, keySearch) {
     for (let key in object) {
-        if (key === keySearch) {
-          delete object[key];
-        }
-        if (typeof object[key] === "object") {
-          functionsModule.deleteKey(object[key],keySearch); 
-        }
+      if (key === keySearch) {
+        delete object[key];
+      }
+      if (typeof object[key] === "object") {
+        functionsModule.deleteKey(object[key], keySearch);
+      }
     }
   },
-  replaceKeyValue(jsonObj, searchValue , newJsonObj) {
+  replaceKeyValue(jsonObj, searchValue, newJsonObj) {
     // Recorrer todas las claves del objeto JSON
     for (let key in jsonObj) {
       // Verificar si el valor de la clave comienza con "AUTH::id_profile"
-      if(Array.isArray(jsonObj[key])){
-        functionsModule.replaceKeyValue(jsonObj[key], searchValue , newJsonObj);
+      if (Array.isArray(jsonObj[key])) {
+        functionsModule.replaceKeyValue(jsonObj[key], searchValue, newJsonObj);
       }
       if (typeof jsonObj[key] === 'string' && jsonObj[key].startsWith(searchValue)) {
         // Reemplazar el valor con el nuevo valor
@@ -203,9 +203,19 @@ const functionsModule = {
       }
       // Si el valor es otro objeto JSON, llamar recursivamente a la función para reemplazar dentro de ese objeto
       if (typeof jsonObj[key] === 'object') {
-        functionsModule.replaceKeyValue(jsonObj[key], searchValue , newJsonObj);
+        functionsModule.replaceKeyValue(jsonObj[key], searchValue, newJsonObj);
       }
     }
+  }, 
+  generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+      const indexRandom = Math.floor(Math.random() * characters.length);
+      result += characters.charAt(indexRandom);
+    }
+    return result;
   }
+
 };
 module.exports = functionsModule;

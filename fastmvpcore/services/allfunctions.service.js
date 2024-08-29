@@ -332,8 +332,20 @@ const servicesModule = {
           data: image
         };
       }
-      else console.error("No se subió la imágen");
+      else {
+        console.error("No se subió la imágen");
+        return {
+          status: "ok",
+          msg: "No se subio la imagen a CF, error en la api o formato incorrecto",
+          data: null
+        };
+      }
     }
+    return {
+      status: "ok",
+      msg: "No se recibió la imagen",
+      data: null
+    };
   },
   async deleteImageCF(project,data){
     const imageUtils = require("../utils/cloudflareimages");
@@ -351,7 +363,6 @@ const servicesModule = {
       }
       else {
         return image
-        
       }
     }
   }
