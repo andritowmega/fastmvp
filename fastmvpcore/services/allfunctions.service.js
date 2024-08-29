@@ -342,20 +342,15 @@ const servicesModule = {
         console.error("DELETE SERVICE - can not delete image to cloudflare", e);
         return e;
       })
-      console.log("image",image)
       if (image && image==true) {
         return {
           status: "ok",
           msg: "Imagen subida correctamente",
-          data: image
+          data: null
         };
       }
       else {
-        return {
-          status: "error",
-          msg: "Error al subir la imagen",
-          data: image
-        };
+        return image
         
       }
     }

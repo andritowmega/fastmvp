@@ -99,17 +99,30 @@ module.exports = {
         }
       ).catch((err) => {
         console.error("Error en delete image", err);
-        throw new Error(`${idimage}: FETCH ERROR `,err.toString  );
+        return {
+          status:"error",
+          data:null,
+          msg:"Fetch error to cloudflare images"
+        };
       });
       if (res && res.status === 200) {
         const response = await res.json();
         result = response;
-        console.log("The image was successfully removed")
-        return response.result;
+        //console.log("The image was successfully removed")
+        return response;
       }
-      throw new Error(`${idimage}: Delete CloudFlareImages:  ${res.statusText}`);
+      return {
+        status:"error",
+        data:null,
+        msg:"Error CloudFlareImages: ID Not Found"
+      };
     } catch (e) {
-      throw new Error(`${idimage}: Delete CloudFlareImages:  `,e.toString );
+      console.error("cloduflare images: ",e)
+      return {
+        status:"error",
+        data:null,
+        msg:"Error CloudFlareImages: ID Not Found"
+      };
     }
   }
 }
