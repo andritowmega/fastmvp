@@ -225,5 +225,22 @@ class FastMvpController {
     return FastMvpController.toResponse(response,req,res);
     
   }
+  static async UploadImageCF(req,res){
+    const {uploadImageCF} = require("../services/allfunctions.service");
+    const response = await uploadImageCF(req.params.project,req.files).catch(e=>{
+      console.error("FastMvp Controller: can't upload image to cloudflareimages");
+      return e;
+    });
+    console.log("response image",response);
+    return FastMvpController.toResponse(response,req,res);
+  }
+  static async DeleteImageCF(req,res){
+    const {deleteImageCF} = require("../services/allfunctions.service");
+    const response = await deleteImageCF(req.params.project,req.body).catch(e=>{
+      console.error("FastMvp Controller: can't delete image to cloudflareimages",e);
+      return e;
+    });
+    return FastMvpController.toResponse(response,req,res);
+  }
 }
 module.exports = FastMvpController;

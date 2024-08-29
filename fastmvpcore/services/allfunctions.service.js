@@ -318,6 +318,54 @@ const servicesModule = {
       };
     }
   },
+  async uploadImageCF(project,files){
+    const imageUtils = require("../utils/cloudflareimages");
+    if(files && files.file){
+      const image = await imageUtils.upload(files,project).catch(e=>{
+        console.error("UPLOAD SERVICE - can not upload image to cloudflare", err);
+        return e;
+      })
+      if (image && image.id) {
+        return {
+          status: "ok",
+          msg: "Imagen subida correctamente",
+          data: image
+        };
+      }
+      else {
+        console.error("No se subió la imágen");
+        return {
+          status: "ok",
+          msg: "No se subio la imagen a CF, error en la api o formato incorrecto",
+          data: null
+        };
+      }
+    }
+    return {
+      status: "ok",
+      msg: "No se recibió la imagen",
+      data: null
+    };
+  },
+  async deleteImageCF(project,data){
+    const imageUtils = require("../utils/cloudflareimages");
+    if(data && data.id){
+      const image = await imageUtils.delete(data.id,project).catch(e=>{
+        console.error("DELETE SERVICE - can not delete image to cloudflare", e);
+        return e;
+      })
+      if (image && image==true) {
+        return {
+          status: "ok",
+          msg: "Imagen subida correctamente",
+          data: null
+        };
+      }
+      else {
+        return image
+      }
+    }
+  }
 };
 
 module.exports = servicesModule;
