@@ -33,11 +33,11 @@ module.exports = {
   async get(project, table, dataJson) {
     return new Promise(async (resolve, reject) => {
       const connection = connectionDb(project); if(!connection){return reject({status: "error", msg: "wrong project", error: {code: "wrongproject"}});}
-      const { makeSqlStringSelect,makeSqlStringSelectWhere,makeSqlStringSelectOrder } = require("../utils/toassemble");
+      const { makeSqlStringSelect,makeSqlStringSelectWhere,makeSqlStringSelectOrder,makeSqlStringSelectLimit } = require("../utils/toassemble");
       const { sanitationStringSql } = require("../utils/functions");
       let queryString = `SELECT ${makeSqlStringSelect(
         dataJson
-      )} FROM ${sanitationStringSql(table)} ${makeSqlStringSelectWhere(dataJson)} ${makeSqlStringSelectOrder(dataJson)}`;
+      )} FROM ${sanitationStringSql(table)} ${makeSqlStringSelectWhere(dataJson)} ${makeSqlStringSelectOrder(dataJson)} ${makeSqlStringSelectLimit(dataJson)}`;
       console.log("queryString", queryString);
       const data = await connection.query(queryString).catch((err) => {
         console.error("MODEL AllTablesCrud: Can not select - ", err);
