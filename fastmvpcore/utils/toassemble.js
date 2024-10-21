@@ -106,6 +106,13 @@ const toAssenbleModule = {
     }
     return ``;
   },
+  makeSqlStringSelectLimit(dataJson) {
+    const { sanitationStringSql } = require("../utils/functions");
+    if (dataJson?.limit) {
+      return ` limit ${sanitationStringSql(dataJson.limit)}`
+    }
+    return ``;
+  },
   makeWhereConditional(conditional){
     const { sanitationStringSql } = require("../utils/functions");
     if(conditional.type){
