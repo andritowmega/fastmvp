@@ -1,0 +1,20 @@
+# Ignorar node_modules
+node_modules/
+
+# Ignorar archivos de log
+*.log
+
+# Ignorar archivos de configuración de editores
+.vscode/
+.idea/
+
+# Ignorar archivos temporales de sistemas operativos
+.DS_Store
+Thumbs.db
+
+# Ignorar archivos de configuración local
+.env
+
+# Ignorar el repositorio git
+.git/
+.gitignore
