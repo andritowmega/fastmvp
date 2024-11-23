@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const FastMvpController = require("../controllers/fastmvp.controller");
+const MediaServerController = require("../controllers/mediaserver.controller");
 const auth = require("../utils/auth");
 
 /* GET api listing. */
@@ -26,7 +27,8 @@ router.post("/:project/:table/update/:key/:value",auth.authenticateUser,auth.rep
 router.post("/:project/:table/repetitivetask/update",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.RepetitiveTaskUpdate);
 router.post("/:project/:table/delete/:key/:value",auth.authenticateUser,auth.replaceWithUserData, FastMvpController.Delete);
 
-
+//Media Server
+router.get("/:project/files/mp3/free/:name",MediaServerController.Mp3Files);
 
 
 module.exports = router;
