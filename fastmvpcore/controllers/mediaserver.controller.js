@@ -14,7 +14,7 @@ class MediaServerController {
     }
     // Construir la ruta completa al archivo
     const filePath = path.join(
-      "/media/andritow/DE02A0C502A0A3CD/musica/musica/surenios",
+        optionsConnetion[project].files.mp3.free,
       fileName
     );
 
