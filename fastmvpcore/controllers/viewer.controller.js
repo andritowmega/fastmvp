@@ -4,5 +4,14 @@ class ViewerController{
         const projectsNames = Object.keys(projects);
         return res.render('fmvp/index', { title: 'FastMVP View', projects:projectsNames });
     }
+    static async SingleProject(req,res){
+        const {getTables} = require("../services/viewer.service");
+        const response = await getTables(req.params.project).catch((e) => {
+            console.error("FastMvp Controller: can't create", e);
+            return e;
+          });
+        console.log("getTables",response);
+        return res.render('fmvp/project/index', { title: req.params.project, tables:response.data });
+    }
 }
 module.exports = ViewerController;
