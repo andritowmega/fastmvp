@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1= title
+  p Projects:
+  ul
+    each project in projects
+        li
+            a(href=`/fm/view/${project}`) #{project}
