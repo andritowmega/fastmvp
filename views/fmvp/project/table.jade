@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+  a(href=`/fm/view/${project}`) Volver a #{project}
+  h1 Tabla: #{table}
+  p 
+    table.styled-table
+        thead
+          tr
+            each coldata in metadata
+                th 
+                    | #{coldata.column_name}
+                    hr
+                    span.head-info #{coldata.data_type} Null: #{coldata.is_nullable}
+    
+       
