@@ -1,5 +1,6 @@
 const connectionDb = require("../../config/postgresdb");
 module.exports = {
+
   async getTables(project) {
     return new Promise(async (resolve, reject) => {
       const connection = connectionDb(project);
@@ -71,3 +72,4 @@ module.exports = {
     });
   },
 };
+
