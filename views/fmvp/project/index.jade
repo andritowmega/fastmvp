@@ -1,0 +1,10 @@
+extends ../layout
+
+block content
+  a(href=`/fm/view/`) Volver a Proyectos
+  h1 Proyecto: #{title}
+  p tablas:
+  ul
+    each table in tables
+        li
+            a(href=`/fm/view/${table.table_name}`) #{table.table_name}

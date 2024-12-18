@@ -8,6 +8,7 @@ const fileUpload = require("express-fileupload");
 
 var indexRouter = require('./routes/index');
 var fastMvpApiRouter = require('./fastmvpcore/routes/api');
+var fastMvpViewerRouter = require('./fastmvpcore/routes/view');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use(fileUpload({ useTempFiles: true, tempFileDir: "/tmp/" }));
 
 app.use('/', indexRouter);
 app.use('/fm/api', fastMvpApiRouter);
+app.use('/fm/view', fastMvpViewerRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
