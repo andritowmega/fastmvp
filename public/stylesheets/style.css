@@ -6,3 +6,22 @@ body {
 a {
   color: #00B7FF;
 }
+.styled-table {
+  border-collapse: collapse; /* Une los bordes */
+  width: 100%;              /* Ancho de la tabla */
+  border: 1px solid #ddd;   /* Borde de la tabla */
+}
+
+.styled-table th,
+.styled-table td {
+  border: 1px solid #ddd;   /* Borde entre celdas */
+  padding: 8px;            /* Espaciado interno */
+}
+
+.styled-table th {
+  background-color: #f4f4f4; /* Color de fondo para encabezados */
+  text-align: left;         /* Alineación del texto */
+}
+.head-info{
+  font-size:10px !important;
+}
