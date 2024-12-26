@@ -5,35 +5,43 @@ block content
     .col
     nav.navbar.navbar-expand-lg.bg-body-tertiary
       .container-fluid
-        a.navbar-brand(href='#') Tabla: #{table}
+        a.navbar-brand(href='#') Table: #{table}
         button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
           span.navbar-toggler-icon
         #navbarSupportedContent.collapse.navbar-collapse
           ul.navbar-nav.me-auto.mb-2.mb-lg-0
             li.nav-item
-              a.nav-link.active(aria-current='page' href=`/fm/view/${project}`) Volver a #{project}
+              a.nav-link.active(aria-current='page' href=`/fm/view/${project}`) Back to #{project}
            
           form.d-flex(role='search')
             input.form-control.me-2(type='search' placeholder='Buscar' aria-label='Search')
             button.btn.btn-outline-success(type='submit') Buscar
   .row 
     .col
-      table.table
-        thead
-          tr
-            each coldata in metadata
-              th(scope='col') 
-                span#popover-text.text-primary(
-                  data-bs-toggle="popover"
-                  data-bs-trigger="hover focus"
-                  data-bs-content=`Type: ${coldata.data_type} | Null: ${coldata.is_nullable}`
-                  data-bs-placement="bottom"
-                ) #{coldata.column_name}
+        .table-responsive
+          table.table
+            thead
+              tr
+                each coldata in metadata
+                  th(scope='col') 
+                    span#popover-text.text-primary(
+                      data-bs-toggle="popover"
+                      data-bs-trigger="hover focus"
+                      data-bs-content=`Type: ${coldata.data_type} | Null: ${coldata.is_nullable}`
+                      data-bs-placement="bottom"
+                    ) #{coldata.column_name}
+            tbody
+              each user in content
+                tr
+                  each column in metadata
+                    td
+                      if typeof user[column.column_name] === 'object'
+                        //- Mostrar JSON como string
+                        pre= JSON.stringify(user[column.column_name], null, 2)
+                      else
+                        //- Mostrar datos normales
+                        = user[column.column_name]
 
-
-
-
-        tbody
   script.
       // Inicializar todos los popovers
       document.addEventListener('DOMContentLoaded', () => {
