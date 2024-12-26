@@ -1,0 +1,47 @@
+extends layout
+block content
+    .row 
+      .col
+        //- Navbar
+        nav.navbar.navbar-expand-lg.bg-dark.fixed-top
+          .container-fluid
+            a.navbar-brand.text-white(href="#") Documentacion
+            button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
+              span.navbar-toggler-icon
+            .collapse.navbar-collapse#navbarNav
+              ul.navbar-nav
+                li.nav-item
+                  a.nav-link.text-white(href="/") Inicio
+                li.nav-item
+                  a.nav-link.text-white(href="/fm/view") Proyectos
+
+                li.nav-item
+                  a.nav-link.text-white(href="https://github.com/andritowmega/fastmvp" target="_blank") GitHub
+    .row 
+      .col.pt-5
+
+        .container.mt-5
+                  h1 Installation
+                  p
+                    | Puedes clonar el proyecto en tu servidor e instalarlo como un proyecto de express. También puedes hacerlo mediante docker directamente.
+                  h3 Manual
+                  pre.
+                  h3 Con Docker
+                  pre.
+                  h2 Configuración
+                  p
+                    | Luego tienes que configurar tus proyectos. Para esto tienes que crear el archivo "configDb.json" en la carpeta config/
+                  pre.
+                  pre.
+                  p
+                    | Como puedes ver puedes crear todos los proyectos que desees. En este ejemplo tenemos test y project2. Esos nombres serán con los que podrás llamarlos por la API. 
+                    code token_secret
+                    |  es la clave que usará el módulo de login para detectar usuarios y permitir su acceso.
+
+    .row 
+      .col
+        // Footer
+        footer.bg-dark.text-white.text-center.p-4
+          p &copy; 2024 FastMVP
+
+        

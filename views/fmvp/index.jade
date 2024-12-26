@@ -3,10 +3,22 @@ extends layout
 block content
   .row 
     .col
-      h1= title
+        //- Navbar
+        nav.navbar.navbar-expand-lg.bg-dark
+          .container-fluid
+            a.navbar-brand.text-white(href="#") Proyectos
+            button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
+              span.navbar-toggler-icon
+            .collapse.navbar-collapse#navbarNav
+              ul.navbar-nav
+                li.nav-item
+                  a.nav-link.text-white(href="/") Inicio
+                li.nav-item
+                  a.nav-link.text-white(href="/doc") Documentacion
+                li.nav-item
+                  a.nav-link.text-white(href="https://github.com/andritowmega/fastmvp" target="_blank") GitHub
   .row.justify-content-center 
-    .col-md-4
-      h4 Projects:
+    .col-md-4.pt-5
       ul.list-group
         each project in projects
           li.list-group-item 
