@@ -25,9 +25,9 @@
 **Nombre del equipo:** 2 Semi Seniors y medio  
 
 **Integrantes:**  
-- Andres Carrasco   
-- Diego Zanabria
-- Luis Ccalluchi
+- Andres Carrasco Quispe   
+- Diego Alonso Zanabria Sacsi
+- Luis Alberto Ccalluchi Lopez
 
 
 ## 🎸 Propósito del Proyecto  
