@@ -1,405 +1,116 @@
+# ✅ Fast MVP  
 
-# Fast MVP
+## 👇 Índice  
 
-It is a project that I started in express javascript. Given the large number of entrepreneurship projects for startups to develop. This project is dedicated to entrepreneurial programmers, it does not focus on quality and correct architecture, we will bet everything on speed in developing mvp's to validate ideas.
-# Why use it
-* You need to develop a quick mvp
-* Install it in less than a minute
-* Focus on the FrontEnd
-* Validate your Idea
-
-# Until when to use it?
-* If your startup starts generating income then change this by developing your robust custom backend
-
-
-## Installation
-
-Install my-project with npm
-
-```bash
-  cd my-project
-  npm install my-project
-```
-    
-## Config Database
-
-create the configDev.json file inside the config folder. This file is in gitignore
-
-``` 
-config/configDev.json
-
-{  
-    user: "postgres",
-    host: "localhost",
-    database: "yourdb",
-    password: "yourpassword",
-    port: 5432
-}
-```
+1. [Equipo](#equipo)  
+2. [Propósito del Proyecto](#propósito-del-proyecto)  
+   - [Objetivo](#objetivo)  
+   - [Arquitectura de Software](#arquitectura-de-software)  
+   - [Funcionalidades principales](#funcionalidades-principales)  
+3. [Tecnologías](#tecnologías)  
+   - [Lenguajes de Programación](#lenguajes-de-programación)  
+   - [Frameworks](#frameworks)  
+   - [Bibliotecas](#bibliotecas)  
+   - [Herramientas de Construcción y Pruebas](#herramientas-de-construcción-y-pruebas)  
 
 
+## 🧑‍💻 Equipo  
+
+**Nombre del equipo:** 2 Semi Seniors y medio  
+
+**Integrantes:**  
+- Andres Carrasco   
+- Diego Zanabria
+- Luis Ccalluchi
 
 
+## 🎸 Propósito del Proyecto  
 
-# REST API
+### Objetivo  
 
-All fastMVP api works on http://localhost:3000/fm/api/
+**Fast MVP** es un proyecto desarrollado en **JavaScript** que funciona sobre **Express.js**. Su objetivo es facilitar la creación de MVPs (Minimum Viable Products) para emprendimientos y startups que necesitan construir prototipos funcionales de manera rápida y económica.  
 
-## Simple CRUD
+Este proyecto ofrece un backend funcional que actúa como un **ORM**, permitiendo que puedas interactuar con él desde el frontend de tu aplicación mediante llamadas API y el envío de parámetros en formato JSON para realizar consultas.  
 
-### Select 
+Es importante destacar que **Fast MVP** no busca reemplazar un backend completo. Su propósito es servir como una herramienta ágil para la construcción de MVPs y la validación de ideas de negocio en sus etapas iniciales.  
+
+### 👷 Arquitectura de Software  
+
+**Fast MVP** utiliza una arquitectura basada en **Frontend-Backend** diseñada para facilitar la creación de prototipos funcionales (MVPs) de manera ágil y económica. La estructura del proyecto incluye las siguientes capas:  
+
+1. **Backend (Express.js con Arquitectura MVC):**  
+   - Desarrollado en **JavaScript**, el backend está construido sobre **Express.js**, empleando el patrón **Modelo-Vista-Controlador (MVC)** para una organización clara y eficiente del código.  
+   - Ofrece un backend funcional que actúa como un **ORM**, permitiendo realizar consultas mediante API REST y gestionar la lógica de negocio, autenticación, y operaciones de datos.  
+
+2. **Frontend:**  
+   - Diseñado para interactuar con el backend a través de llamadas API y enviar parámetros en formato JSON.  
+   - Flexible en su integración con tecnologías como React, Angular, o cualquier framework que permita desarrollar interfaces dinámicas y modernas.  
+
+**Nota:** Fast MVP está pensado como una herramienta ágil para validar ideas de negocio en sus primeras etapas y no pretende reemplazar un backend completo.  
+
+### Funcionalidades principales  
 
 
-`POST /fm/api/:table/get`
+## 🛠️ Tecnologías  
 
-Makes the select query from any table.
+### Lenguajes de Programación  
+- JavaScript  
 
-#### Select all
-do not send anything in the body to obtain a query of type SELECT * FROM TABLE;
-#### Response
-    {
-        "status": "ok",
-        "msg": "Datos obtenidos",
-        "data": [
-            {
-                "id": 31,
-                "name": "Carlos2 Torres",
-                "phone": "929545871",
-                "email": "carlos2@hotmail.com",
-                "status": false,
-                "city": null
-            },
-            {
-                "id": 32,
-                "name": "Carlos3 Torres",
-                "phone": "929545873",
-                "email": "carlos3@hotmail.com",
-                "status": false,
-                "city": null
-            },
-            {
-                "id": 35,
-                "name": "Carlos5 Torres",
-                "phone": "929545875",
-                "email": "carlos5@hotmail.com",
-                "status": false,
-                "city": null
-            }
-        ]
-    }
+### Frameworks  
+- Express.js (Backend)  
+- Jade (Frontend)  
 
-#### Select with filters
-add filters to the select query by sending filters in the body to obtain the following result:
-Example: SELECT filter1,filter2,filter3 FROM table;
+### Bibliotecas  
+- React Router  
+- Tailwind CSS  
+- Material UI y Material UI Icons  
 
-``` 
-body payload
+### Herramientas de Construcción y Pruebas  
+- npm (gestión de dependencias para Express)  
+- jest (pruebas unitarias y pruebas funcionales)
 
-{  
-    filters: ["name","phone"],
-}
-```
-#### Response
 
-    {
-        "status": "ok",
-        "msg": "Datos obtenidos",
-        "data": [
-            {
-                "name": "Carlos2 Torres",
-                "phone": "929545871"
-            },
-            {
-                "name": "Carlos3 Torres",
-                "phone": "929545873"
-            },
-            {
-                "name": "Carlos5 Torres",
-                "phone": "929545875"
-            }
-        ]
-    }
+## 🗿 CI/CD Pipeline
 
-### Insert 
-
-`POST /fm/api/:table/create`
-
-insert data into any table agregando en el body.
-
-``` 
-body payload
-
-{  
-    "name":"Carlos6 Torres",
-    "phone":"929545876",
-    "email":"carlos6@hotmail.com",
-    "status":true
-}
-```
-#### Response
-
-    {
-        "status": "ok",
-        "msg": "Se insertó correctamente",
-        "data": {
-            "id": 36,
-            "name": "Carlos6 Torres",
-            "phone": "929545876",
-            "email": "carlos6@hotmail.com",
-            "status": true,
-            "city": null
-        }
-    }
-
-### Delete
-
-`POST /fm/api/:table/delete/:key/:value`
-
-Removes data from any table by adding the where conditional to :key/:value.
-
-For example: /fm/api/user/delete/id/15
-
-create the statement DELETE FROM user WHERE id = 15 RETURNING *;
-
-#### Response
-
-    {
-        "status": "ok",
-        "msg": "Se elimino correctamente",
-        "data": {
-            "id": 20,
-            "name": "Andres Carrasco",
-            "phone": "929960761",
-            "email": "andres1@hotmail.com",
-            "status": true,
-            "city": null
-        }
-    }
-
-### Update
-
-`POST /fm/api/:table/update/:key/:value`
-
-Update data from any table by adding the where conditional to :key/:value.
-
-For example: /fm/api/user/update/id/27
-
-``` 
-body payload
-
-{
-    "phone":"929960763",
-    "email":"algo@hotmail.com"
-}
-```
-
-create the statement UPDATE user SET phone=$1, email=$2 WHERE id = 15 RETURNING *;
-
-#### Response
-
-    {
-        "status": "ok",
-        "msg": "Se actualizo correctamente",
-        "data": {
-            "id": 27,
-            "name": "Andres Carrasco",
-            "phone": "929960763",
-            "email": "algo@hotmail.com",
-            "status": true,
-            "city": null
-        }
-    }
-
-### InnerJoin
-
-It is important to keep in mind the position of the tables for SQL queries, table1 will be on the left and table2 will be on the right for the next queries that require where, left join and right join
-
-`EXAMPLE POST /fm/api/:table1/innerj/:table2`
-
-    SELECT * FROM table1 INNER JOIN tabla2 ON table1.column = table2.column;
-
-`EXAMPLE POST /fm/api/user/innerj/history`
-
-    SELECT * FROM user INNER JOIN history ON user.column = history.column;
-
-#### InnerJoin without where
-
-`POST /fm/api/:table1/innerj/:table2`
-
-``` 
-body payload
-
-"keys":{
-        "leftKey":"rightKey"
+1. **Construcción Automática**: Se clona el repositorio del backend y del frontend desde GitHub.
+ ```groovy
+    stage('Build') {
+           
     }
 ```
-    SELECT * FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey;
 
-#### EXAMPLE InnerJoin without where
-
-`POST /fm/api/tst/innerj/test2` 
-
-``` 
-body payload
-
-"keys":{
-        "id":"id_user"
+2. **Análisis Estático**: 
+ ```groovy
+    stage('Build') {
+           
     }
 ```
-    SELECT * FROM tst INNER JOIN test2 ON tst.id = test2.id_user;
-``` 
-Response
 
-{
-    "status": "ok",
-    "msg": "Datos obtenidos",
-    "data": [
-        {
-            "id": 1,
-            "name": "Carlos2 Torres",
-            "phone": "929545871",
-            "email": "carlos2@hotmail.com",
-            "status": false,
-            "city": null,
-            "origen": "La Campiña",
-            "destino": "El centro",
-            "id_pasajero": 32,
-            "id_user": 31,
-            "precio": "25.1"
-        },
-        {
-            "id": 2,
-            "name": "Carlos2 Torres",
-            "phone": "929545871",
-            "email": "carlos2@hotmail.com",
-            "status": false,
-            "city": null,
-            "origen": "Plaza de Armas",
-            "destino": "Feria el altiplano",
-            "id_pasajero": 35,
-            "id_user": 31,
-            "precio": "30"
-        },
-        {
-            "id": 3,
-            "name": "Carlos6 Torres",
-            "phone": "929545876",
-            "email": "carlos6@hotmail.com",
-            "status": true,
-            "city": null,
-            "origen": "Estadio melgar",
-            "destino": "Aeropuerto",
-            "id_pasajero": 27,
-            "id_user": 36,
-            "precio": "58.5"
-        },
-        {
-            "id": 4,
-            "name": "Carlos6 Torres",
-            "phone": "929545876",
-            "email": "carlos6@hotmail.com",
-            "status": true,
-            "city": null,
-            "origen": "Estadio melgar",
-            "destino": "Aeropuerto",
-            "id_pasajero": 27,
-            "id_user": 36,
-            "precio": "58.5"
-        }
-    ]
-}
-```
 
-You can also add filters for the select query
-
-`POST /fm/api/tst/innerj/test2` 
-
-``` 
-body payload
-
-{
-    "filters":["tst.id AS idtst","precio"],
-    "keys":{
-        "id":"id_user"
+3. **Pruebas Unitarias**: Se clona el repositorio del backend y del frontend desde GitHub.
+ ```groovy
+    stage('Build') {
+           
     }
-}
-```
-    SELECT tst.id AS idtst,precio FROM tst INNER JOIN test2 ON tst.id = test2.id_user;
-``` 
-Response
-
-{
-    "status": "ok",
-    "msg": "Datos obtenidos",
-    "data": [
-        {
-            "idtst": 31,
-            "precio": "25.1"
-        },
-        {
-            "idtst": 31,
-            "precio": "30"
-        },
-        {
-            "idtst": 36,
-            "precio": "58.5"
-        },
-        {
-            "idtst": 36,
-            "precio": "58.5"
-        }
-    ]
-}
 ```
 
-#### InnerJoin with where
-
-To use where, you need to maintain the order of left table and right table in the body payload.
-
-When adding RIGHT at the end, you want to search for the right table, in this example it is table2
-
-`POST /fm/api/:table1/innerj/:table2/right`
-
-``` 
-body payload
-
-{
-    "value":123,
-    "keys":{
-        "leftKey":"rightKey"
+4. **Pruebas Funcionales**: 
+ ```groovy
+    stage('Build') {
+           
     }
-}
-
 ```
-    SELECT * FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey WHERE table2.rightkey = 123;
 
-When adding LEFT at the end, you want to search for the left table, in this example it is table1
-
-`POST /fm/api/:table1/innerj/:table2/left`
-
-``` 
-body payload
-
-{
-    "value":123,
-    "keys":{
-        "leftKey":"rightKey"
+5. **Pruebas de Seguridad**: 
+ ```groovy
+    stage('Build') {
+           
     }
-}
 ```
-    SELECT * FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey WHERE table1.leftkey = 123;
 
-You can also add filters for the select query and the answers are the same as the previous ones.
-
-``` 
-body payload
-
-{
-    "filters":["tst.id AS idtst","*"],
-    "value":123,
-    "keys":{
-        "id":"id_user"
+6. **Pruebas de Performance**: 
+ ```groovy
+    stage('Build') {
+           
     }
-}
 ```
-    SELECT tst.id AS idtst,* FROM table1 INNER JOIN tabla2 ON table1.leftKey = table2.rightKey WHERE table1.leftkey = 123;
