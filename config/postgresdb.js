@@ -20,10 +20,10 @@ if (process.env.STR_DB) {
 }
 
 module.exports = (dbFind) => {
-  var dbSelected = optionsConnetion[dbFind];
-  if(dbSelected?.connection){
+  let dbSelected = optionsConnetion[dbFind];
+  if (dbSelected?.connection) {
     return new Pool(dbSelected.connection);
-  }else{
+  } else {
     return null;
   }
 };
