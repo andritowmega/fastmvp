@@ -1,9 +1,13 @@
 extends layout
 
 block content
-  h1= title
-  p Projects:
-  ul
-    each project in projects
-        li
+  .row 
+    .col
+      h1= title
+  .row.justify-content-center 
+    .col-md-4
+      h4 Projects:
+      ul.list-group
+        each project in projects
+          li.list-group-item 
             a(href=`/fm/view/${project}`) #{project}

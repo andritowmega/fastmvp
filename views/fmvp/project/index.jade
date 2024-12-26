@@ -1,12 +1,14 @@
 extends ../layout
-
 block content
-  a(href=`/fm/view/`) Volver a Proyectos
-  h1 Proyecto: #{title}
-  p tablas:
-  ul
-    each table in tables
-        li
+  .row 
+    .col
+      a(href=`/fm/view/`) Back to projects
+      h1 Project: #{title}
+  .row.justify-content-center 
+    .col-md-4
+      h4 Tables:
+      ul.list-group
+        each table in tables
+          li.list-group-item 
             a(href="/fm/view/" + title + "/" + table.table_name) #{table.table_name}
-
 
