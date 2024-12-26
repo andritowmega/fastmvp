@@ -2,12 +2,16 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 .row{
+  padding:0px;
   margin:0px;
 }
-.col{
+.col,.col-12{
   margin: 0px;
+  padding: 0px;
 }
+footer{
 
+}
 a {
   color: #00B7FF;
 }
@@ -29,4 +33,11 @@ a {
 }
 .head-info{
   font-size:10px !important;
+}
+.info h1{
+  text-align: center;
+}
+.info p{
+  font-size: 15pt;
+  text-align: justify;
 }
