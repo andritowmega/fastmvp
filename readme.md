@@ -12,7 +12,12 @@
    - [Frameworks](#frameworks)  
    - [Bibliotecas](#bibliotecas)  
    - [Herramientas de Construcción y Pruebas](#herramientas-de-construcción-y-pruebas)  
-
+4. [Jenkins pipeline](#Jenkins)  
+5. [Pruebas unitarias con Jest](#pruebas-unitarias-con-jest)
+6. [Postman Pruebas funcionales](#postman-pruebas-funcionales)
+7. [Escaneo con ZAP](#Escaneo-con-ZAP)
+8. [FastMVP View](#fastmvp-view)
+8. [FastMVP Api](#fastmvp-api)
 
 ## 🧑‍💻 Equipo  
 
@@ -119,54 +124,36 @@ pipeline {
                                 "type": "postgres",
                                 "connection": {
                                   "user": "citygo",
-                                  "host": "161.132.40.70",
+                                  "host": "161.132.50.80",
                                   "database": "citygo",
-                                  "password": "Citygo2024%",
+                                  "password": "Citygo",
                                   "port": 5432
                                 },
-                                "token_secret":"TokenCitygo2024%"
+                                "token_secret":"TokenCityo2024"
                               },
                               "disronaldo": {
                                 "type": "postgres",
                                 "connection": {
                                   "user": "fronaldo",
-                                  "host": "161.132.40.70",
+                                  "host": "161.150.31.58",
                                   "database": "fronaldo",
-                                  "password": "Fronaldo2024%",
+                                  "password": "Fronaldo4",
                                   "port": 5432
                                 },
-                                "token_secret":"TokenRonaldo2024%"
+                                "token_secret":"Ronaldo2021"
                               },
                               "fronaldo":{
                                 "type":"postgres",
                                 "connection":{
                                   "user":"andres_ronaldo",
-                                  "host":"191.101.15.246",
+                                  "host":"191.101.16.158",
                                   "database":"andres_ronaldo",
-                                  "password":"Ronaldo2024%",
+                                  "password":"Ronaldo%",
                                   "port": 5432
                                 },
-                                "token_secret":"RonaldoDistribuidora2024%"
+                                "token_secret":"RonaldoDista2024%"
                               },
-                              "topbem":{
-                                "type":"postgres",
-                                "connection":{
-                                  "user":"topbem",
-                                  "host":"161.132.40.70",
-                                  "database":"topbem",
-                                  "password":"Topbem2024%",
-                                  "port": 5432
-                                },
-                                "token_secret":"T0pB3m2024%",
-                                "cloudflareimages":{
-                                  "accountId":"7e4b1e56a752e23daf5a4a9ac4609990",
-                                  "apiKey":"-N8lfGW4yj-X6Hb4Do9h71uSM6fyxP75LZy9oG28",
-                                  "domain":{
-                                    "URI":"https://corefmv.smarttech.pe",
-                                    "URIF":"http://localhost"
-                                  }
-                                }
-                              }
+
                             }' > ${REPO_DIR}/config/configDb.json
                         else
                             echo "El archivo configDb.json ya existe, no es necesario crear."
@@ -213,5 +200,131 @@ pipeline {
     }
 }
 ```
+
+
+### Jenkins
+- La implementación de entrega continua con jenkins fue configurado con docker, en las siguientes imagenes se pueden ver como funcionan los stages:
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/jenkins-stages-builds.PNG)
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/jenkins-deploys.PNG)
+
+### Pruebas Unitarias con Jest
+
+Jest es un framework de pruebas para aplicaciones de JavaScript desarrollado por Facebook. Es ampliamente utilizado para escribir, organizar y ejecutar pruebas unitarias, de integración y funcionales, principalmente en proyectos que utilizan tecnologías como React, Node.js y TypeScript, aunque es compatible con cualquier entorno de JavaScript.
+
+Jest es conocido por su facilidad de configuración, rapidez en la ejecución de pruebas y características avanzadas como mocking y snapshots, lo que lo convierte en una herramienta preferida para garantizar la calidad del código en proyectos modernos.
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/jtest-cap-2.PNG)
+
+```bash
+npm run test
+```
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/jtest-cap.PNG)
+
+
+### Postman pruebas funcionales
+
+Con postman se realizaron las pruebas funcionales de las llamadas a la API
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/test-postman-1.jpg)
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/test-postman-2.jpg)
+
+
+### Escaneo con ZAP
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/test-zap-1.jpg)
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/test-zap-2.jpg)
+
+### FastMVP View
+
+La parte visual de FastMVP ingresa a las bases de datos y tablas de tu proyecto en el menú "proyectos"
+```bash
+localhost:3000/   or yourdomain.com
+```
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/workin1.PNG)
+
+Selecciona tu proyecto, para este ejemplo seleccionamos TopBem:
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/working2.PNG)
+
+Verás lasa tablas de tu base de datos:
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/working3.PNG)
+
+Seleccionamos la tabla "product":
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/working4.PNG)
+
+### FastMVP API
+Las llamadas de la api para cada proyecto son dinámicas, puedes obtener datos de tus tablas, insertar datos, hacer joins y usar modules de login y registro para manejar usuarios.
+
+#### Get Data
+
+```bash
+POST http://localhost:3000/fm/api/:project/:table/get
+```
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-get.PNG)
+
+##### GetData with limit
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-get-limit.PNG)
+
+##### GetData with where
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-get-where.PNG)
+
+#### Insert Data
+
+
+```bash
+POST http://localhost:3000/fm/api/:project/:table/create
+```
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-insert.PNG)
+
+#### Register Module
+
+Puedes registrar datos en las tablas por creadas con los siguientes parametros
+
+- Login: (Estos datos deben ir obligatoriamente como mínimo, pero puedes agregar más)
+    - id - PK AutoIncrement
+    - email - varchar
+    - password - varchar
+    - id_profile - int
+    - status - bool default true
+    - role - smallint default 2
+
+- profile: (puedes agregar más campos si deseas)
+    - id_profile - PK AutoIncrement
+    - name - varchar
+    - phone - varchar
+    - address - varchar
+
+Se puede usar la función orderedlist para registrar un usuario con los siguientes parametros:
+
+```bash
+POST http://localhost:3000/fm/api/:project/:table/orderedlist
+```
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-module-register.PNG)
+
+Automáticamente hasheara el password en forma segura y guardará los datos en las tablas login y profile.
+
+#### Login Module
+
+Para poder usar login module que ya está listo para trabajar con middlewares y manejar las sesiones en nuestro proyecto se debe tener las tablas del modulo Register:
+
+
+```bash
+POST http://localhost:3000/fm/api/:project/auth/login/token/check
+```
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-module-login.PNG)
+
+
+
 
 
