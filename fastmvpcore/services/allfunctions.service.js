@@ -84,7 +84,11 @@ const servicesModule = {
     }
   },
   async deletePg(project, table, condition) {
-    const deleteResponse = await AllTablesModel.delete(project,table,condition).catch((e) => {
+    const deleteResponse = await AllTablesModel.delete(
+      project,
+      table,
+      condition
+    ).catch((e) => {
       console.error("SERVICE AllFunctions: can not delete", e);
       return e;
     });
@@ -135,12 +139,14 @@ const servicesModule = {
     }
   },
   async innerJoinLeft(project, tables, dataJson) {
-    const create = await JoinsModel.innerJoinValueLeft(project, tables, dataJson).catch(
-      (e) => {
-        console.error("SERVICE AllFunctions: can not execute innerJoin", e);
-        return e;
-      }
-    );
+    const create = await JoinsModel.innerJoinValueLeft(
+      project,
+      tables,
+      dataJson
+    ).catch((e) => {
+      console.error("SERVICE AllFunctions: can not execute innerJoin", e);
+      return e;
+    });
     if (create?.status && create.status == "ok") {
       return {
         status: "ok",
@@ -162,12 +168,14 @@ const servicesModule = {
     }
   },
   async innerJoinRight(project, tables, dataJson) {
-    const create = await JoinsModel.innerJoinValueRight(project, tables, dataJson).catch(
-      (e) => {
-        console.error("SERVICE AllFunctions: can not execute innerJoin", e);
-        return e;
-      }
-    );
+    const create = await JoinsModel.innerJoinValueRight(
+      project,
+      tables,
+      dataJson
+    ).catch((e) => {
+      console.error("SERVICE AllFunctions: can not execute innerJoin", e);
+      return e;
+    });
     if (create?.status && create.status == "ok") {
       return {
         status: "ok",
@@ -188,11 +196,11 @@ const servicesModule = {
       };
     }
   },
-  async orderedList(project,data){
-    if(data?.orderedList && Array.isArray(data.orderedList)){
-      var response = new Array();
-      for(let singleQuery of data.orderedList){
-        if(!singleQuery?.type) {
+  async orderedList(project, data) {
+    if (data?.orderedList && Array.isArray(data.orderedList)) {
+      let response = new Array();
+      for (let singleQuery of data.orderedList) {
+        if (!singleQuery?.type) {
           response.push({
             status: "error",
             msg: "El parametro Type no fue enviado",
@@ -200,47 +208,56 @@ const servicesModule = {
           });
           continue;
         }
-        if(!singleQuery?.body){
+        if (!singleQuery?.body) {
           response.push({
             status: "error",
             msg: "El parametro body no fue enviado",
             data: null,
           });
           continue;
-        } 
-        const { useReplace } = require('../utils/functions');
-        data.orderedList = useReplace(singleQuery,response);
-        if(singleQuery.type=="create"){
-          let createResponse = await servicesModule.create(project,singleQuery.in,singleQuery.body).catch(
-            (e) => {
-              console.error("SERVICE AllFunctions: can not create on OrderedList", e);
+        }
+        const { useReplace } = require("../utils/functions");
+        data.orderedList = useReplace(singleQuery, response);
+        if (singleQuery.type == "create") {
+          let createResponse = await servicesModule
+            .create(project, singleQuery.in, singleQuery.body)
+            .catch((e) => {
+              console.error(
+                "SERVICE AllFunctions: can not create on OrderedList",
+                e
+              );
               return e;
-            }
-          );
+            });
           let dataJson = {};
-          dataJson[singleQuery.in]=createResponse
+          dataJson[singleQuery.in] = createResponse;
           response.push(dataJson);
           continue;
-        }else if(singleQuery.type=="get"){
-          let getResponse = await servicesModule.get(project,singleQuery.in,singleQuery.body).catch(
-            (e) => {
-              console.error("SERVICE AllFunctions: can not Get on OrderedList", e);
+        } else if (singleQuery.type == "get") {
+          let getResponse = await servicesModule
+            .get(project, singleQuery.in, singleQuery.body)
+            .catch((e) => {
+              console.error(
+                "SERVICE AllFunctions: can not Get on OrderedList",
+                e
+              );
               return e;
-            }
-          )
+            });
           let dataJson = {};
-          dataJson[singleQuery.in]=getResponse;
+          dataJson[singleQuery.in] = getResponse;
           response.push(dataJson);
           continue;
-        }else if(singleQuery.type=="delete"){
-          let deleteResponse = await servicesModule.deletePg(project,singleQuery.in,singleQuery.body).catch(
-            (e) => {
-              console.error("SERVICE AllFunctions: can not Delete on OrderedList", e);
+        } else if (singleQuery.type == "delete") {
+          let deleteResponse = await servicesModule
+            .deletePg(project, singleQuery.in, singleQuery.body)
+            .catch((e) => {
+              console.error(
+                "SERVICE AllFunctions: can not Delete on OrderedList",
+                e
+              );
               return e;
-            }
-          )
+            });
           let dataJson = {};
-          dataJson[singleQuery.in]=deleteResponse
+          dataJson[singleQuery.in] = deleteResponse;
           response.push(dataJson);
           continue;
         }
@@ -250,12 +267,12 @@ const servicesModule = {
           code: 500,
           data: null,
         });
-      };
+      }
       return {
         status: "ok",
         msg: "Consultas ordenadas",
         data: response,
-      }
+      };
     }
     return {
       status: "error",
@@ -264,9 +281,9 @@ const servicesModule = {
       data: null,
     };
   },
-  async loginToken(project,table,body){
-    const {isNoEmptyJSON} = require("../utils/functions");
-    if(!body?.where && !isNoEmptyJSON(body.where)){
+  async loginToken(project, table, body) {
+    const { isNoEmptyJSON } = require("../utils/functions");
+    if (!body?.where && !isNoEmptyJSON(body.where)) {
       return {
         status: "error",
         msg: "No se ha enviado los datos correcto en check.where",
@@ -274,30 +291,38 @@ const servicesModule = {
         data: null,
       };
     }
-    body.where.type="iqual";
+    body.where.type = "iqual";
     const get = await AllTablesModel.get(project, table, body).catch((e) => {
       console.error("SERVICE AllFunctions: can not get", e);
       return e;
     });
     if (get?.status && get.status == "ok") {
-      if(get.data.length==0) return {
-        status:"error",
-        msg:"Credenciales incorrectas",
-        data: null
-      }
-      const {newTokenUser,comparePassword} = require("../utils/auth");
-      const checkPassword = await comparePassword(body.password,get.data[0].password).catch(e=>{
-        console.error("ALLFUNCTIONS Login Module: i can't compare password",e);
+      if (get.data.length == 0)
+        return {
+          status: "error",
+          msg: "Credenciales incorrectas",
+          data: null,
+        };
+      const { newTokenUser, comparePassword } = require("../utils/auth");
+      const checkPassword = await comparePassword(
+        body.password,
+        get.data[0].password
+      ).catch((e) => {
+        console.error("ALLFUNCTIONS Login Module: i can't compare password", e);
         return null;
-      })
-      if(checkPassword){
-        const dataToken = await newTokenUser(get.data[0],body.lifetimedays,project);
+      });
+      if (checkPassword) {
+        const dataToken = await newTokenUser(
+          get.data[0],
+          body.lifetimedays,
+          project
+        );
         return {
           status: "ok",
           msg: "Bienvenido de nuevo",
           data: {
-            token: dataToken
-          }
+            token: dataToken,
+          },
         };
       }
       return {
@@ -318,54 +343,55 @@ const servicesModule = {
       };
     }
   },
-  async uploadImageCF(project,files){
+  async uploadImageCF(project, files) {
     const imageUtils = require("../utils/cloudflareimages");
-    if(files && files.file){
-      const image = await imageUtils.upload(files,project).catch(e=>{
-        console.error("UPLOAD SERVICE - can not upload image to cloudflare", err);
+    if (files && files.file) {
+      const image = await imageUtils.upload(files, project).catch((e) => {
+        console.error(
+          "UPLOAD SERVICE - can not upload image to cloudflare",
+          err
+        );
         return e;
-      })
+      });
       if (image && image.id) {
         return {
           status: "ok",
           msg: "Imagen subida correctamente",
-          data: image
+          data: image,
         };
-      }
-      else {
+      } else {
         console.error("No se subió la imágen");
         return {
           status: "ok",
           msg: "No se subio la imagen a CF, error en la api o formato incorrecto",
-          data: null
+          data: null,
         };
       }
     }
     return {
       status: "ok",
       msg: "No se recibió la imagen",
-      data: null
+      data: null,
     };
   },
-  async deleteImageCF(project,data){
+  async deleteImageCF(project, data) {
     const imageUtils = require("../utils/cloudflareimages");
-    if(data && data.id){
-      const image = await imageUtils.delete(data.id,project).catch(e=>{
+    if (data && data.id) {
+      const image = await imageUtils.delete(data.id, project).catch((e) => {
         console.error("DELETE SERVICE - can not delete image to cloudflare", e);
         return e;
-      })
-      if (image && image==true) {
+      });
+      if (image && image == true) {
         return {
           status: "ok",
           msg: "Imagen subida correctamente",
-          data: null
+          data: null,
         };
-      }
-      else {
-        return image
+      } else {
+        return image;
       }
     }
-  }
+  },
 };
 
 module.exports = servicesModule;
