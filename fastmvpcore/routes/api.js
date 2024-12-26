@@ -1,5 +1,5 @@
-var express = require("express");
-var router = express.Router();
+let express = require("express");
+let router = express.Router();
 const FastMvpController = require("../controllers/fastmvp.controller");
 const MediaServerController = require("../controllers/mediaserver.controller");
 const auth = require("../utils/auth");

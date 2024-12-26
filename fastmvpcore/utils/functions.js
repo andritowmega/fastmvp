@@ -132,12 +132,15 @@ const functionsModule = {
     };
   },
   useReplace(singleQuery, responseArray) {
-    for (var fieldKey in singleQuery.body) {
+    for (let fieldKey in singleQuery.body) {
       if (singleQuery.body.hasOwnProperty(fieldKey)) {
-        var value = singleQuery.body[fieldKey];
-        if (typeof value === 'string' && value.includes('USE::')) {
+        let value = singleQuery.body[fieldKey];
+        if (typeof value === "string" && value.includes("USE::")) {
           let valueToFind = singleQuery.body[fieldKey].substring(5);
-          singleQuery.body[fieldKey] = functionsModule.findKeyFromArrayResponse(responseArray, valueToFind);
+          singleQuery.body[fieldKey] = functionsModule.findKeyFromArrayResponse(
+            responseArray,
+            valueToFind
+          );
         }
       }
     }
@@ -145,12 +148,12 @@ const functionsModule = {
   },
   findKeyFromArrayResponse(responseArray, valueToFind) {
     let arrayToFind = new Array();
-    if (!valueToFind.includes('.')) return null;
-    arrayToFind = valueToFind.split('.');
+    if (!valueToFind.includes(".")) return null;
+    arrayToFind = valueToFind.split(".");
     if (arrayToFind.length < 2) return null;
     for (let i = 0; i < responseArray.length; i++) {
       if (arrayToFind[0] in responseArray[i]) {
-        if (responseArray[i][arrayToFind[0]].status == 'error') return null;
+        if (responseArray[i][arrayToFind[0]].status == "error") return null;
         if (arrayToFind[1] in responseArray[i][arrayToFind[0]].data) {
           return responseArray[i][arrayToFind[0]].data[arrayToFind[1]];
         }
@@ -159,7 +162,9 @@ const functionsModule = {
     return null;
   },
   isNoEmptyJSON(obj) {
-    return typeof obj === 'object' && obj !== null && JSON.stringify(obj) !== '{}';
+    return (
+      typeof obj === "object" && obj !== null && JSON.stringify(obj) !== "{}"
+    );
   },
   generateResponse(response, req, res) {
     if (response?.status && response.status == "ok") {
@@ -196,26 +201,29 @@ const functionsModule = {
       if (Array.isArray(jsonObj[key])) {
         functionsModule.replaceKeyValue(jsonObj[key], searchValue, newJsonObj);
       }
-      if (typeof jsonObj[key] === 'string' && jsonObj[key].startsWith(searchValue)) {
+      if (
+        typeof jsonObj[key] === "string" &&
+        jsonObj[key].startsWith(searchValue)
+      ) {
         // Reemplazar el valor con el nuevo valor
-        const getKey = jsonObj[key].replace(/^AUTH::/, '');
+        const getKey = jsonObj[key].replace(/^AUTH::/, "");
         jsonObj[key] = newJsonObj[getKey];
       }
       // Si el valor es otro objeto JSON, llamar recursivamente a la función para reemplazar dentro de ese objeto
-      if (typeof jsonObj[key] === 'object') {
+      if (typeof jsonObj[key] === "object") {
         functionsModule.replaceKeyValue(jsonObj[key], searchValue, newJsonObj);
       }
     }
-  }, 
+  },
   generateRandomString(length) {
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let result = '';
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
     for (let i = 0; i < length; i++) {
       const indexRandom = Math.floor(Math.random() * characters.length);
       result += characters.charAt(indexRandom);
     }
     return result;
-  }
-
+  },
 };
 module.exports = functionsModule;

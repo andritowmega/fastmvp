@@ -1,5 +1,36 @@
 extends layout
-
 block content
-  h1= title
-  p Welcome to #{title}
+    .row 
+      .col
+        //- Navbar
+        nav.navbar.navbar-expand-lg.bg-dark.fixed-top
+          .container-fluid
+            a.navbar-brand.text-white(href="#") FastMVP
+            button.navbar-toggler(type="button", data-bs-toggle="collapse", data-bs-target="#navbarNav", aria-controls="navbarNav", aria-expanded="false", aria-label="Toggle navigation")
+              span.navbar-toggler-icon
+            .collapse.navbar-collapse#navbarNav
+              ul.navbar-nav
+                li.nav-item
+                  a.nav-link.text-white(href="/fm/view") Proyectos
+                li.nav-item
+                  a.nav-link.text-white(href="/doc") Documentacion
+                li.nav-item
+                  a.nav-link.text-white(href="https://github.com/andritowmega/fastmvp" target="_blank") GitHub
+
+    .row.justify-content-center 
+      .col-8.pt-5.info
+        h1 FastMVP
+        p 
+          img(src="/images/banner.png" width="100%")
+          | Construye Productos Mínimos Viables en forma rápida con FastMVP.
+          br
+          br
+          | Escrito en Javascript sobre Express JS. Proporciona un backend dinámico que puede servir API'S de multiples proyectos, con FastMVP no necesitarás desarrollar un backend de tu proyecto ya que funciona como un ORM que mediante las API'S dinámicas podrás acceder a tus proyectos y a sus tablas mediante los End Points dinámicos.
+          br
+          br
+          | De esta forma FastMVP te permite validar tus prototipos funcionales enfocandote más en la parte visual de tu proyecto.
+          br
+          br
+          | FastMVP no pretende reemplazar el backend de tu proyecto muy por el contrario pretende ayudarte a desarrollar tu primer prototipo funcional, nos enfocamos en Start Ups que presentan sus proyectos para levantar inversiones iniciales. Enfocate en desarrollar el mejor diseño de tu proyecto y FastMVP trabajará el backend.
+        
+       
