@@ -411,7 +411,7 @@ POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2/right
 POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2/left
 ```
 
-![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/innerj.PNG)
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/refs/heads/main/public/assetsReadme/innerj.png)
 
 ```bash
 POST http://localhost:3000/fm/api/:project/auth/login/token/check
