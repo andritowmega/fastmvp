@@ -18,30 +18,194 @@ block content
                 li.nav-item
                   a.nav-link.text-white(href="https://github.com/andritowmega/fastmvp" target="_blank") GitHub
     .row 
-      .col.pt-5
+      .col.p-5
+          // ✅ Fast MVP
+          h1 ✅ Fast MVP
 
-        .container.mt-5
-                  h1 Installation
-                  p
-                    | Puedes clonar el proyecto en tu servidor e instalarlo como un proyecto de express. También puedes hacerlo mediante docker directamente.
-                  h3 Manual
-                  pre.
-                  h3 Con Docker
-                  pre.
-                  h2 Configuración
-                  p
-                    | Luego tienes que configurar tus proyectos. Para esto tienes que crear el archivo "configDb.json" en la carpeta config/
-                  pre.
-                  pre.
-                  p
-                    | Como puedes ver puedes crear todos los proyectos que desees. En este ejemplo tenemos test y project2. Esos nombres serán con los que podrás llamarlos por la API. 
-                    code token_secret
-                    |  es la clave que usará el módulo de login para detectar usuarios y permitir su acceso.
+          // 👇 Índice
+          h2 👇 Índice
+          ol
+            li: a(href="#equipo") Equipo
+            li: a(href="#propósito-del-proyecto") Propósito del Proyecto
+              ul
+                li: a(href="#objetivo") Objetivo
+                li: a(href="#arquitectura-de-software") Arquitectura de Software
+                li: a(href="#funcionalidades-principales") Funcionalidades principales
+            li: a(href="#tecnologías") Tecnologías
+              ul
+                li: a(href="#lenguajes-de-programación") Lenguajes de Programación
+                li: a(href="#frameworks") Frameworks
+                li: a(href="#bibliotecas") Bibliotecas
+                li: a(href="#herramientas-de-construcción-y-pruebas") Herramientas de Construcción y Pruebas
+            li: a(href="#jenkins") Jenkins pipeline
+            li: a(href="#pruebas-unitarias-con-jest") Pruebas unitarias con Jest
+            li: a(href="#postman-pruebas-funcionales") Postman Pruebas funcionales
+            li: a(href="#escaneo-con-zap") Escaneo con ZAP
+            li: a(href="#configuracion-inicial") Configuración Inicial
+            li: a(href="#fastmvp-view") FastMVP View
+            li: a(href="#fastmvp-api") FastMVP API
 
-    .row 
-      .col
-        // Footer
-        footer.bg-dark.text-white.text-center.p-4
-          p &copy; 2024 FastMVP
+          // 🧑‍💻 Equipo
+          h2 🧑‍💻 Equipo
+          p Nombre del equipo: 2 Semi Seniors y medio
+          ul
+            li Andres Carrasco Quispe
+            li Diego Alonso Zanabria Sacsi
+            li Luis Alberto Ccalluchi Lopez
 
-        
+          // 🎸 Propósito del Proyecto
+          h2 🎸 Propósito del Proyecto
+
+          h3 Objetivo
+          p
+            | Fast MVP es un proyecto desarrollado en JavaScript que funciona sobre
+            strong Express.js.
+            | Su objetivo es facilitar la creación de MVPs (Minimum Viable Products) para emprendimientos y startups que necesitan construir prototipos funcionales de manera rápida y económica.
+
+          p Este proyecto ofrece un backend funcional que actúa como un ORM, permitiendo que puedas interactuar con él desde el frontend de tu aplicación mediante llamadas API y el envío de parámetros en formato JSON para realizar consultas.
+
+          p Fast MVP no busca reemplazar un backend completo. Su propósito es servir como una herramienta ágil para la construcción de MVPs y la validación de ideas de negocio en sus etapas iniciales.
+
+          h3 👷 Arquitectura de Software
+          p Fast MVP utiliza una arquitectura basada en Frontend-Backend diseñada para facilitar la creación de prototipos funcionales (MVPs) de manera ágil y económica. La estructura del proyecto incluye las siguientes capas:
+
+          ol
+            li
+              strong Backend (Express.js con Arquitectura MVC):
+              ul
+                li Desarrollado en JavaScript, el backend está construido sobre Express.js, empleando el patrón Modelo-Vista-Controlador (MVC) para una organización clara y eficiente del código.
+                li Ofrece un backend funcional que actúa como un ORM, permitiendo realizar consultas mediante API REST y gestionar la lógica de negocio, autenticación, y operaciones de datos.
+            li
+              strong Frontend:
+              ul
+                li Diseñado para interactuar con el backend a través de llamadas API y enviar parámetros en formato JSON.
+                li Flexible en su integración con tecnologías como React, Angular, o cualquier framework que permita desarrollar interfaces dinámicas y modernas.
+
+          p Nota: Fast MVP está pensado como una herramienta ágil para validar ideas de negocio en sus primeras etapas y no pretende reemplazar un backend completo.
+
+          h3 Funcionalidades principales
+
+          // 🛠️ Tecnologías
+          h2 🛠️ Tecnologías
+
+          h3 Lenguajes de Programación
+          ul
+            li JavaScript
+
+          h3 Frameworks
+          ul
+            li Express.js (Backend)
+            li Jade (Frontend)
+
+          h3 Bibliotecas
+          ul
+            li React Router
+            li Tailwind CSS
+            li Material UI y Material UI Icons
+
+          h3 Herramientas de Construcción y Pruebas
+          ul
+            li npm (gestión de dependencias para Express)
+            li jest (pruebas unitarias y pruebas funcionales)
+
+          // 🗿 CI/CD Pipeline
+          h3 🗿 CI/CD Pipeline
+          pre
+            code.language-groovy
+              | pipeline {
+              |     agent any
+              |     environment {
+              |         REPO_DIR = '/home/proyects/dock-fastmvp' // Ruta completa a tu proyecto
+              |     }
+              |     stages {
+              |         stage('Prepare Repository') {
+              |             steps {
+              |                 script {
+              |                     sh """
+              |                         if [ ! -d "${REPO_DIR}" ]; then
+              |                             echo "Directorio no encontrado, creando ${REPO_DIR}..."
+              |                             mkdir -p ${REPO_DIR}
+              |                         fi
+              |                     """
+              |                     if (fileExists("${REPO_DIR}/.git")) {
+              |                         dir(REPO_DIR) {
+              |                             sh 'git pull origin main'
+              |                         }
+              |                     } else {
+              |                         dir(REPO_DIR) {
+              |                             git credentialsId: 'github_credentials', branch: 'main', url: 'https://github.com/andritowmega/fastmvp.git'
+              |                         }
+              |                     }
+              |                 }
+              |             }
+              |         }
+              |         // Other stages here
+              |     }
+              | }
+
+          // Más contenido traducido a Pug disponible. 
+          h3 FastMVP API
+          p Las llamadas de la API para cada proyecto son dinámicas, puedes obtener datos de tus tablas, insertar datos, hacer joins y usar módulos de login y registro para manejar usuarios.
+
+          h4 Get Data
+          pre
+            code POST http://localhost:3000/fm/api/:project/:table/get
+          img(src="https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-get.PNG")
+
+          h5 GetData with limit
+          img(src="https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-get-limit.PNG")
+
+          h5 GetData with where
+          img(src="https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-get-where.PNG")
+
+          h4 Insert Data
+          pre
+            code POST http://localhost:3000/fm/api/:project/:table/create
+          img(src="https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-insert.PNG")
+
+          h4 Register Module
+          p Puedes registrar datos en las tablas creadas con los siguientes parámetros:
+          ul
+            li Login: (Estos datos deben ir obligatoriamente como mínimo, pero puedes agregar más)
+              ul
+                li id - PK AutoIncrement
+                li email - varchar
+                li password - varchar
+                li id_profile - int
+                li status - bool default true
+                li role - smallint default 2
+            li profile: (puedes agregar más campos si deseas)
+              ul
+                li id_profile - PK AutoIncrement
+                li name - varchar
+                li phone - varchar
+                li address - varchar
+          p Se puede usar la función orderedlist para registrar un usuario con los siguientes parámetros:
+          pre
+            code POST http://localhost:3000/fm/api/:project/:table/orderedlist
+          img(src="https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-module-register.PNG")
+          p Automáticamente hasheará el password en forma segura y guardará los datos en las tablas login y profile.
+
+          h4 Login Module
+          p Para poder usar el módulo login, que ya está listo para trabajar con middlewares y manejar las sesiones en nuestro proyecto, se debe tener las tablas del módulo Register:
+          pre
+            code POST http://localhost:3000/fm/api/:project/auth/login/token/check
+          img(src="https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-module-login.PNG")
+
+          h4 Inner Join
+          pre
+            code POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2
+          pre
+            code.
+              {
+                "keys": {
+                  "id_profile": "id_profile"
+                }
+              }
+
+          p Para variantes de inner join right o left:
+          pre
+            code POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2/right
+            code POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2/left
+          img(src="https://raw.githubusercontent.com/andritowmega/fastmvp/refs/heads/main/public/assetsReadme/innerj.png")
+
