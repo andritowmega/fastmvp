@@ -390,7 +390,32 @@ POST http://localhost:3000/fm/api/:project/auth/login/token/check
 
 ![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/postman-module-login.PNG)
 
+#### Inner Join 
 
+```bash
+POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2
+```
+
+```json
+ {
+    "keys":{
+        "id_profile":"id_profile"
+    }
+}
+```
+
+Para variantes de innerjoin right o left:
+
+```bash
+POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2/right
+POST http://localhost:3000/fm/api/:project/:table1/innerj/:table2/left
+```
+
+![](https://raw.githubusercontent.com/andritowmega/fastmvp/019b2672fd44301bc880458617d656f8d817ebff/public/assetsReadme/innerj.PNG)
+
+```bash
+POST http://localhost:3000/fm/api/:project/auth/login/token/check
+```
 
 
 
