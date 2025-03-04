@@ -42,6 +42,12 @@ router.post(
   auth.replaceWithUserData,
   FastMvpController.GetInfo
 );
+router.post(
+  "/:project/auth/token/info",
+  auth.authenticateUser,
+  auth.replaceWithUserData,
+  FastMvpController.InfoToken
+);
 router.post("/:project/auth/:table/token/check", FastMvpController.CheckToken);
 router.post(
   "/:project/:table/get",

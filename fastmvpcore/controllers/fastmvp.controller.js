@@ -160,11 +160,30 @@ class FastMvpController {
       return FastMvpController.toResponse(response,req,res);
   }
   static async CheckToken(req,res){
+    console.log("check");
     const { loginToken } = require("../services/allfunctions.service");
     const response = await loginToken(req.params.project,req.params.table,req.body).catch((e) => {
       console.error("FastMvp Controller: can't execute LoginToken", e);
       return e;
     });
+    return FastMvpController.toResponse(response,req,res);
+  }
+  static async InfoToken(req,res){
+    let response = {};
+    if(req.datatoken){
+      response = {
+        status: "ok",
+        msg: "Sesión correcta",
+        data: null,
+      };
+    }else{
+      response = {
+        status: "error",
+        msg: "Error token",
+        data: null,
+      };
+    }
+
     return FastMvpController.toResponse(response,req,res);
   }
   static async GetInfo(req,res){

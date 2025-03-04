@@ -79,12 +79,11 @@ const authModule = {
         }
       }
       if(!needCheck) {
-        if(req.body.dtfmvp) delete req.body.dtfmvp;
         let tokenBrowser =
-        req.body.dtfmvp ||
-        req.query.dtfmvp ||
+        req.body.token ||
+        req.query.token ||
         req.headers["authorization"] ||
-        req.cookies.dtfmvp;
+        req.cookies.token;
         const bearerHeader = req.headers["authorization"];
         if (typeof bearerHeader !== "undefined")
           tokenBrowser = bearerHeader.split(" ")[1];
@@ -96,10 +95,10 @@ const authModule = {
         return next();
       }
       let tokenBrowser =
-        req.body.dtfmvp ||
-        req.query.dtfmvp ||
+        req.body.token ||
+        req.query.token ||
         req.headers["authorization"] ||
-        req.cookies.dtfmvp;
+        req.cookies.token;
       const bearerHeader = req.headers["authorization"];
       if (typeof bearerHeader !== "undefined")
         tokenBrowser = bearerHeader.split(" ")[1];
@@ -148,7 +147,6 @@ const authModule = {
       const optionsConnetion = require("../../config/configDb.json");
       jwt.verify(tokenBrowser, optionsConnetion[project].token_secret, (err, decoded) => {
         if (err) {
-          console.log("err",err)
           resolve(null);
         } else {
           resolve(decoded);
