@@ -292,10 +292,18 @@ const servicesModule = {
       };
     }
     body.where.type = "iqual";
-    const get = await AllTablesModel.get(project, table, body).catch((e) => {
+    const tables = {
+      table1: table,
+      table2: "profile",
+    };
+    const get = await JoinsModel.innerJoin(project,tables,body).catch((e) => {
       console.error("SERVICE AllFunctions: can not get", e);
       return e;
     });
+    /*const get = await AllTablesModel.get(project, table, body).catch((e) => {
+      console.error("SERVICE AllFunctions: can not get", e);
+      return e;
+    });*/
     if (get?.status && get.status == "ok") {
       if (get.data.length == 0)
         return {
