@@ -88,6 +88,7 @@ const toAssenbleModule = {
             response += ` ${sanitationStringSql(dataJson.where.conditionals[i])} `;
           }
         }
+       
         return " WHERE "+response;
       }
       if(dataJson.where.conditional && isNoEmptyJSON(dataJson.where.conditional)){
@@ -114,6 +115,9 @@ const toAssenbleModule = {
     return ``;
   },
   makeWhereConditional(conditional){
+    if (conditional?.conditional && typeof conditional.conditional[Object.keys(conditional.conditional)[0]] !== 'string') {
+      conditional.conditional[Object.keys(conditional.conditional)[0]] = String(conditional.conditional[Object.keys(conditional.conditional)[0]]);
+    }
     const { sanitationStringSql } = require("../utils/functions");
     if(conditional.type){
       if(conditional.type=="iqual"){
