@@ -80,10 +80,10 @@ const authModule = {
       }
       if(!needCheck) {
         let tokenBrowser =
-        req.body.token ||
-        req.query.token ||
+        req.body.dtfmvp ||
+        req.query.dtfmvp ||
         req.headers["authorization"] ||
-        req.cookies.token;
+        req.cookies.dtfmvp;
         const bearerHeader = req.headers["authorization"];
         if (typeof bearerHeader !== "undefined")
           tokenBrowser = bearerHeader.split(" ")[1];
@@ -95,10 +95,10 @@ const authModule = {
         return next();
       }
       let tokenBrowser =
-        req.body.token ||
-        req.query.token ||
+        req.body.dtfmvp ||
+        req.query.dtfmvp ||
         req.headers["authorization"] ||
-        req.cookies.token;
+        req.cookies.dtfmvp;
       const bearerHeader = req.headers["authorization"];
       if (typeof bearerHeader !== "undefined")
         tokenBrowser = bearerHeader.split(" ")[1];
