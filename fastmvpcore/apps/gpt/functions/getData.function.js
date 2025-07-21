@@ -7,5 +7,14 @@ exports.module = {
             return e
         })
         return response
-    }
+    },
+    async getWeather(latitude, longitude) {
+        try {
+          const response = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m`);
+          const data = response.data;
+          return data.current.temperature_2m;
+        } catch (error) {
+          throw new Error('No se pudo obtener el clima.');
+        }
+      }
 }
