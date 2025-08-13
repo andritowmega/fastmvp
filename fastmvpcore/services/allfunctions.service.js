@@ -216,8 +216,8 @@ const servicesModule = {
           });
           continue;
         }
-        const { useReplace } = require("../utils/functions");
-        data.orderedList = useReplace(singleQuery, response);
+        const { useReplace,replaceUSE } = require("../utils/functions");
+        data.orderedList = replaceUSE(singleQuery, response);
         if (singleQuery.type == "create") {
           let createResponse = await servicesModule
             .create(project, singleQuery.in, singleQuery.body)

@@ -26,7 +26,18 @@ const functionsModule = {
           data: null,
         },
       };
-    } else if (errJson.error.code == "23505") {
+    } else if (errJson.error.code == "22P02") {
+      return {
+        conditional: true,
+        payload: {
+          status: "error",
+          msg: "valor invalido para un tipo de dato",
+          code: errJson.error.code,
+          detail: errJson.error.detail,
+          data: null,
+        },
+      };
+    }else if (errJson.error.code == "23505") {
       return {
         conditional: true,
         payload: {
@@ -131,6 +142,7 @@ const functionsModule = {
       payload: errJson,
     };
   },
+  /* Eliminar este código */
   useReplace(singleQuery, responseArray) {
     for (let fieldKey in singleQuery.body) {
       if (singleQuery.body.hasOwnProperty(fieldKey)) {
@@ -146,6 +158,27 @@ const functionsModule = {
     }
     return singleQuery;
   },
+
+  replaceUSE(obj, responseArray) {
+    if (typeof obj === "string") {
+      if (obj.includes("USE::")) {
+        let valueToFind = obj.substring(5);
+        obj = functionsModule.findKeyFromArrayResponse(responseArray,valueToFind);;
+      }
+      return obj;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(item => functionsModule.replaceUSE(item, responseArray));
+    }
+    if (typeof obj === "object" && obj !== null) {
+      for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          obj[key] = functionsModule.replaceUSE(obj[key], responseArray);
+        }
+      }
+    }
+    return obj;
+  },
   findKeyFromArrayResponse(responseArray, valueToFind) {
     let arrayToFind = new Array();
     if (!valueToFind.includes(".")) return null;
@@ -154,6 +187,11 @@ const functionsModule = {
     for (let i = 0; i < responseArray.length; i++) {
       if (arrayToFind[0] in responseArray[i]) {
         if (responseArray[i][arrayToFind[0]].status == "error") return null;
+        if (Array.isArray(responseArray[i][arrayToFind[0]].data) && responseArray[i][arrayToFind[0]].data.length>0) {
+          if (arrayToFind[1] in responseArray[i][arrayToFind[0]].data[0]) {
+            return responseArray[i][arrayToFind[0]].data[0][arrayToFind[1]];
+          }
+        }
         if (arrayToFind[1] in responseArray[i][arrayToFind[0]].data) {
           return responseArray[i][arrayToFind[0]].data[arrayToFind[1]];
         }
