@@ -13,7 +13,8 @@ RUN npm install
 # Copia el resto del código de la aplicación
 COPY . .
 
-RUN mkdir -p /app/data
+# Crear carpetas necesarias
+RUN mkdir -p /app/data /usr/src/app/public/tmp
 
 # Expone el puerto en el que tu app escuchará (por ejemplo, 3000)
 EXPOSE 3000
