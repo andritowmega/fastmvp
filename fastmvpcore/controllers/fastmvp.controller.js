@@ -11,10 +11,40 @@ class FastMvpController {
   static async Get(req, res) {
     const { get } = require("../services/allfunctions.service");
     const response = await get(req.params.project, req.params.table, req.body).catch((e) => {
-      console.error("FastMvp Controller: can't get", e);
-      return e;
+        console.error("FastMvp Controller: can't get", e);
+        return e;
     });
-    return FastMvpController.toResponse(response,req,res);
+    if(req.query?.file && req.query.file=="excel"){
+      const Excel = require("../utils/excel");
+      const excel = new Excel();
+      if(response.data){
+        const data = {
+          excel: {
+            sheet: {
+              name: req.params.table,
+              properties: {}
+            }
+          },
+          data: response.data
+        };
+        const buffer = await excel.create(data);
+        const filename = `Reporte_${req.params.table}_${new Date().toISOString().slice(0,10)}.xlsx`;
+        res.setHeader(
+          "Content-Disposition",
+          `attachment; filename=${filename}`
+        );
+        res.setHeader(
+          "Content-Type",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+        res.send(buffer);
+      }
+      else res.send("No hay datos para generar el archivo");
+    }else{
+      
+      return FastMvpController.toResponse(response,req,res);
+    }
+    
   }
   static async Update(req, res) {
     const { update } = require("../services/allfunctions.service");
@@ -215,7 +245,6 @@ class FastMvpController {
     if(req.body.where?.conditional?.key){
       content.where.conditional[req.body.where.conditional.key] = req.datatoken[req.body.where.conditional.key] 
     }
-    console.log("password", req.body.password)
     content.password = req.body.password;
     content.lifetimedays="1";
 
