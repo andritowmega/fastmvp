@@ -5,7 +5,7 @@ class MediaServerController {
   static async Mp3Files(req, res) {
     try {
       const { project } = req.params;
-      const relativePath = req.params[0]; // <- Express guarda el comodín aquí
+      const relativePath = decodeURIComponent(req.params[0]); // <- Express guarda el comodín aquí
 
       const urlConfig = path.join(__dirname, "../../config/configDb.json");
       const config = require(urlConfig);
