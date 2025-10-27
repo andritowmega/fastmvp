@@ -100,5 +100,6 @@ router.post(
 
 //Media Server
 router.get("/:project/files/mp3/free/:name", MediaServerController.Mp3Files);
+router.get("/:project/files/mp3/free/:level1:/:level2:/:name", MediaServerController.Mp3Files);
 
 module.exports = router;
