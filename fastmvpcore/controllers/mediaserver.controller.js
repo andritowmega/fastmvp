@@ -4,7 +4,8 @@ const fs = require("fs").promises;
 class MediaServerController {
   static async Mp3Files(req, res) {
     try {
-      const { project, level1, level2, name } = req.params;
+      const { project } = req.params;
+      const relativePath = req.params[0]; // <- Express guarda el comodín aquí
 
       const urlConfig = path.join(__dirname, "../../config/configDb.json");
       const config = require(urlConfig);
@@ -14,16 +15,10 @@ class MediaServerController {
       }
 
       const basePath = config[project].files.mp3.free;
-      let filePath;
-
-      // Detectar qué parámetros existen
-      if (level1 && level2) {
-        filePath = path.join(basePath, level1, level2, name);
-      } else {
-        filePath = path.join(basePath, name);
-      }
+      const filePath = path.join(basePath, relativePath);
 
       await fs.access(filePath, fs.constants.F_OK);
+
       res.setHeader("Content-Type", "audio/mpeg");
       return res.sendFile(filePath);
     } catch (err) {
