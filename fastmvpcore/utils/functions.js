@@ -1,17 +1,19 @@
 const functionsModule = {
+  // sanitationStringSql necesita refactorizar para injectionsql y mejorar para parametros preparados
   sanitationStringSql(data) {
-    if (data && (typeof data === "string" || typeof data === "number")) {
-      if (data && typeof data === "number") {
-        data = data.toString();
-      }
-      const cleanData = data
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim();
-      const cleanDataWithoutSqlInjection = cleanData.replace(/(['";])/g, "");
-      return cleanDataWithoutSqlInjection;
+    if (!data) return null;
+    if (typeof data === "number") {
+      data = data.toString();
     }
-    return null;
+    if (typeof data !== "string") {
+      return null;
+    }
+    if (data.length > 500) {
+      throw new Error("Input too long (max 500 characters)");
+    }
+    const cleanData = data.trim().replace(/\s+/g, ' ');
+    const escaped = cleanData.replace(/'/g, "''");
+    return escaped;
   },
   errorControlWithSqlCode(errJson, table) {
     console.log("errorJson", errJson);
