@@ -54,6 +54,79 @@ const toAssenbleModule = {
     return response;
   },
   makeSqlStringSelect(datayJson) {
+    // Función helper para detectar trigrams en el where
+    const extractTrigramFunctions = (where) => {
+      const trigramFunctions = [];
+      const { sanitationStringSql } = require("../utils/functions");
+      
+      if (!where) return trigramFunctions;
+      
+      // Procesar condicionales individuales
+      if (where.type === "trigram" && where.trigram && where.conditional) {
+        const field = Object.keys(where.conditional)[0];
+        const value = where.conditional[field];
+        
+        let trigramFunction;
+        switch(where.trigram){
+          case "similarity":
+            trigramFunction = `similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+            break;
+          case "word_similarity":
+            trigramFunction = `word_similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+            break;
+          case "strict_word_similarity":
+            trigramFunction = `strict_word_similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+            break;
+          case "distance":
+            trigramFunction = `distance('${sanitationStringSql(value)}', ${field}) AS similarity`;
+            break;
+          case "word_distance":
+            trigramFunction = `word_distance('${sanitationStringSql(value)}', ${field}) AS similarity`;
+            break;
+          default:
+            trigramFunction = `similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+        }
+        trigramFunctions.push(trigramFunction);
+      }
+      
+      // Procesar arrays de condicionales
+      if (Array.isArray(where.conditionals)) {
+        where.conditionals.forEach(conditional => {
+          if (conditional.type === "trigram") {
+            const field = Object.keys(conditional.conditional)[0];
+            const value = conditional.conditional[field];
+            
+            let trigramFunction;
+            switch(conditional.trigram){
+              case "similarity":
+                trigramFunction = `similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+                break;
+              case "word_similarity":
+                trigramFunction = `word_similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+                break;
+              case "strict_word_similarity":
+                trigramFunction = `strict_word_similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+                break;
+              case "distance":
+                trigramFunction = `distance('${sanitationStringSql(value)}', ${field}) AS similarity`;
+                break;
+              case "word_distance":
+                trigramFunction = `word_distance('${sanitationStringSql(value)}', ${field}) AS similarity`;
+                break;
+              default:
+                trigramFunction = `similarity('${sanitationStringSql(value)}', ${field}) AS similarity`;
+            }
+            trigramFunctions.push(trigramFunction);
+          }
+        });
+      }
+      
+      return trigramFunctions;
+    };
+    
+    // Detectar trigrams en el where
+    const trigramFunctions = extractTrigramFunctions(datayJson?.where);
+    
     if(datayJson?.functions?.length && datayJson.functions.length > 0){
       for(let i=0; i<datayJson.functions.length;i++){
         if(datayJson.functions[i].includes("SUM::")){
@@ -67,13 +140,26 @@ const toAssenbleModule = {
           datayJson.functions[i] = `AVG(${datayJson.functions[i]})`;
         }
       }
-      return datayJson.functions.join(", ");
+      
+      // Combinar funciones existentes con trigrams
+      const allFunctions = [...datayJson.functions, ...trigramFunctions];
+      return allFunctions.join(", ");
     }
+    
     if (datayJson?.filters?.length && datayJson.filters.length > 0) {
       let namesString = datayJson.filters.join(", ");
-      let response = `${namesString}`;
-      return response;
+      // Si hay trigrams, agregarlos
+      if (trigramFunctions.length > 0) {
+        namesString += ", " + trigramFunctions.join(", ");
+      }
+      return namesString;
     }
+    
+    // Si hay trigrams pero no hay filtros especificados, usar * + trigrams
+    if (trigramFunctions.length > 0) {
+      return `*, ${trigramFunctions.join(", ")}`;
+    }
+    
     return ` * `;
   },
   makeSqlStringSelectWhere(dataJson) {
@@ -118,7 +204,7 @@ const toAssenbleModule = {
     if (conditional?.conditional && typeof conditional.conditional[Object.keys(conditional.conditional)[0]] !== 'string') {
       conditional.conditional[Object.keys(conditional.conditional)[0]] = String(conditional.conditional[Object.keys(conditional.conditional)[0]]);
     }
-    const { sanitationStringSql } = require("../utils/functions");
+    const { sanitationStringSql, isNoEmptyJSON } = require("../utils/functions");
     if(conditional.type){
       if(conditional.type=="iqual"){
         if(conditional.conditional[Object.keys(conditional.conditional)[0]] == "CURRENT_DATE"){
@@ -155,6 +241,38 @@ const toAssenbleModule = {
           return `${Object.keys(conditional.conditional)[0]} <> ${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]].replace("ROW::",""))}`;
         }
         return `${Object.keys(conditional.conditional)[0]}<>'${sanitationStringSql(conditional.conditional[Object.keys(conditional.conditional)[0]])}'`;
+      }else if(conditional.type=="trigram"){
+        // Soporte para trigrams con diferentes operadores
+        if(conditional.trigram && conditional.conditional && isNoEmptyJSON(conditional.conditional)){
+          const field = Object.keys(conditional.conditional)[0];
+          const value = conditional.conditional[field];
+          
+          switch(conditional.trigram){
+            case "similarity":
+              // similarity % - devuelve porcentaje de similaridad (0.0 - 1.0)
+              return `${field} % '${sanitationStringSql(value)}'`;
+            
+            case "word_similarity":
+              // word_similarity %> - similaridad basada en palabras completas
+              return `${field} %> '${sanitationStringSql(value)}'`;
+            
+            case "strict_word_similarity":
+              // strict_word_similarity %>> - similaridad estricta de palabras
+              return `${field} %>> '${sanitationStringSql(value)}'`;
+            
+            case "distance":
+              // distance <-> - distancia trigram (menor = más similar)
+              return `${field} <-> '${sanitationStringSql(value)}'`;
+            
+            case "word_distance":
+              // word_distance <<-> - distancia basada en palabras
+              return `${field} <<-> '${sanitationStringSql(value)}'`;
+            
+            default:
+              // Si el tipo de trigram no es reconocido, usar similarity por defecto
+              return `${field} % '${sanitationStringSql(value)}'`;
+          }
+        }
       }
         
     }
